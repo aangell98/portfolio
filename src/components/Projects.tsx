@@ -4,6 +4,7 @@ import { useI18n } from '../i18n'
 import { LINKS, type Category, type ProjectItem } from '../data/content'
 import Reveal, { Kicker } from './ui/Reveal'
 import { TechIcon, asset } from './ui/Icons'
+import ProjectModal from './ProjectModal'
 
 function ProjectMark({ p }: { p: ProjectItem }) {
   if (p.logo) {
@@ -72,7 +73,7 @@ function RepoLinks({ p }: { p: ProjectItem }) {
   )
 }
 
-function FeaturedCard({ p }: { p: ProjectItem }) {
+function FeaturedCard({ p, onOpen }: { p: ProjectItem; onOpen: (p: ProjectItem) => void }) {
   const ref = useRef<HTMLDivElement>(null)
   const mx = useMotionValue(0.5)
   const my = useMotionValue(0.5)
@@ -92,7 +93,8 @@ function FeaturedCard({ p }: { p: ProjectItem }) {
       <div
         ref={ref}
         onMouseMove={onMove}
-        className="group relative overflow-hidden rounded-3xl border border-violet-400/20 bg-panel/50 p-8 sm:p-10"
+        onClick={() => onOpen(p)}
+        className="group relative cursor-pointer overflow-hidden rounded-3xl border border-violet-400/20 bg-panel/50 p-8 transition-colors hover:border-violet-400/40 sm:p-10"
       >
         <motion.div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100" style={{ background: bg }} />
         <div className="relative grid gap-8 lg:grid-cols-[auto_1fr] lg:items-center">
@@ -128,7 +130,8 @@ function FeaturedCard({ p }: { p: ProjectItem }) {
   )
 }
 
-const Card = forwardRef<HTMLDivElement, { p: ProjectItem; i: number }>(function Card({ p, i }, outerRef) {
+const Card = forwardRef<HTMLDivElement, { p: ProjectItem; i: number; onOpen: (p: ProjectItem) => void }>(function Card({ p, i, onOpen }, outerRef) {
+  const { t } = useI18n()
   const ref = useRef<HTMLDivElement>(null)
   const mx = useMotionValue(0.5)
   const my = useMotionValue(0.5)
@@ -162,8 +165,9 @@ const Card = forwardRef<HTMLDivElement, { p: ProjectItem; i: number }>(function 
         ref={ref}
         onMouseMove={onMove}
         onMouseLeave={reset}
+        onClick={() => onOpen(p)}
         style={{ rotateX: rx, rotateY: ry, transformPerspective: 1000 }}
-        className="group relative flex h-full flex-col overflow-hidden rounded-3xl border border-white/8 bg-panel/50 p-6"
+        className="group relative flex h-full cursor-pointer flex-col overflow-hidden rounded-3xl border border-white/8 bg-panel/50 p-6"
       >
         <motion.div className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-300 group-hover:opacity-100" style={{ background: bg }} />
         <span className="absolute left-0 top-0 h-1 w-full origin-left scale-x-0 transition-transform duration-500 group-hover:scale-x-100" style={{ background: `linear-gradient(90deg, ${p.accent}, transparent)` }} />
@@ -186,8 +190,11 @@ const Card = forwardRef<HTMLDivElement, { p: ProjectItem; i: number }>(function 
           </div>
         )}
 
-        <div className="relative mt-5 border-t border-white/5 pt-4">
+        <div className="relative mt-5 flex items-center justify-between border-t border-white/5 pt-4">
           <RepoLinks p={p} />
+          <span className="shrink-0 pl-2 font-mono text-[10px] uppercase tracking-wider text-mist/40 transition-colors group-hover:text-cyan">
+            {t.work.featuresLabel} +
+          </span>
         </div>
       </motion.div>
     </motion.div>
@@ -197,6 +204,7 @@ const Card = forwardRef<HTMLDivElement, { p: ProjectItem; i: number }>(function 
 export default function Projects() {
   const { t } = useI18n()
   const [filter, setFilter] = useState<'all' | 'work' | 'personal'>('all')
+  const [selected, setSelected] = useState<ProjectItem | null>(null)
   const featured = t.work.projects.find((p) => p.category === 'flagship')!
   const rest = useMemo(() => t.work.projects.filter((p) => p.category !== 'flagship'), [t.work.projects])
   const shown = useMemo(() => (filter === 'all' ? rest : rest.filter((p) => p.category === filter)), [rest, filter])
@@ -222,7 +230,7 @@ export default function Projects() {
         </Reveal>
 
         <div className="mt-10">
-          <FeaturedCard p={featured} />
+          <FeaturedCard p={featured} onOpen={setSelected} />
         </div>
 
         <div className="mt-12 flex flex-wrap items-center justify-between gap-4">
@@ -252,11 +260,13 @@ export default function Projects() {
         <motion.div layout className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           <AnimatePresence mode="popLayout">
             {shown.map((p, i) => (
-              <Card key={p.id} p={p} i={i} />
+              <Card key={p.id} p={p} i={i} onOpen={setSelected} />
             ))}
           </AnimatePresence>
         </motion.div>
       </div>
+
+      <ProjectModal project={selected} onClose={() => setSelected(null)} />
     </section>
   )
 }
