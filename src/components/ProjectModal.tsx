@@ -83,6 +83,49 @@ export default function ProjectModal({ project, onClose }: { project: ProjectIte
 
             {/* body */}
             <div className="space-y-7 p-6 sm:p-8">
+              {project.shot && (
+                <a
+                  href={project.live ?? project.repos[0]?.href}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="group relative block overflow-hidden rounded-xl border border-white/10 bg-ink/40 shadow-[0_18px_50px_-20px_rgba(0,0,0,0.8)]"
+                >
+                  <div className="flex items-center gap-1.5 border-b border-white/8 bg-ink/60 px-3.5 py-2.5">
+                    <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
+                    <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
+                    {project.live && (
+                      <span className="ml-2 inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider text-emerald-300/80">
+                        <span className="relative flex h-1.5 w-1.5">
+                          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/70" />
+                          <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                        </span>
+                        {t.work.livePreview}
+                      </span>
+                    )}
+                  </div>
+                  <div className="relative overflow-hidden">
+                    <img
+                      src={asset(project.shot)}
+                      alt={`${project.name} preview`}
+                      loading="lazy"
+                      decoding="async"
+                      className="block w-full transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                      onError={(e) => {
+                        ;(e.currentTarget.closest('a') as HTMLElement | null)?.style.setProperty('display', 'none')
+                      }}
+                    />
+                    {project.live && (
+                      <div className="pointer-events-none absolute inset-0 flex items-end justify-end bg-gradient-to-t from-ink/70 via-transparent to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                        <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-xs font-semibold text-white backdrop-blur-sm">
+                          {t.work.openLive} &#8599;
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </a>
+              )}
+
               <p className="text-[15px] leading-relaxed text-mist/85">{project.longBlurb ?? project.blurb}</p>
 
               {project.features && (

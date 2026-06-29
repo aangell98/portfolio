@@ -17,6 +17,7 @@ export interface ProjectItem {
   metrics?: string[]
   icon?: string
   logo?: string
+  shot?: string
   category: Category
   repos: RepoLink[]
   live?: string
@@ -61,6 +62,8 @@ export interface Content {
     filters: { all: string; work: string; personal: string }
     liveLabel: string
     liveDemo: string
+    livePreview: string
+    openLive: string
     viewCode: string
     featuresLabel: string
     highlightsLabel: string
@@ -114,6 +117,7 @@ function projectsEN(): ProjectItem[] {
       category: 'flagship',
       repos: ENTANGLE_REPOS,
       live: 'https://blue-rock-0771cc403.1.azurestaticapps.net',
+      shot: 'projects/shots/entangle.png',
       accent: '#8b5cf6',
     },
     {
@@ -140,6 +144,7 @@ function projectsEN(): ProjectItem[] {
       category: 'work',
       repos: [{ label: 'Code', href: 'https://github.com/aangell98/insurance-ai-agents' }],
       live: 'https://ambitious-river-0f1566b03.7.azurestaticapps.net',
+      shot: 'projects/shots/insurance.png',
       accent: '#7fa6ff',
     },
     {
@@ -166,6 +171,7 @@ function projectsEN(): ProjectItem[] {
       category: 'work',
       repos: [{ label: 'Code', href: 'https://github.com/aangell98/sales-cockpit-ai-agents' }],
       live: 'https://agreeable-flower-09b095e03.7.azurestaticapps.net',
+      shot: 'projects/shots/sales-cockpit.png',
       accent: '#46C7E0',
     },
     {
@@ -217,6 +223,7 @@ function projectsEN(): ProjectItem[] {
       category: 'work',
       repos: [{ label: 'Code', href: 'https://github.com/aangell98/cart-recovery-ai-agents' }],
       live: 'https://purple-forest-08b16d503.7.azurestaticapps.net',
+      shot: 'projects/shots/cart-recovery.png',
       accent: '#5fe0c8',
     },
     {
@@ -268,6 +275,7 @@ function projectsEN(): ProjectItem[] {
       category: 'personal',
       repos: [{ label: 'Code', href: 'https://github.com/aangell98/liminal' }],
       live: 'https://aangell98.github.io/liminal/',
+      shot: 'projects/shots/liminal.png',
       accent: '#ff7a59',
     },
     {
@@ -604,6 +612,8 @@ export const CONTENT: Record<Lang, Content> = {
       filters: { all: 'All', work: 'Professional', personal: 'Personal' },
       liveLabel: 'Live',
       liveDemo: 'Live demo',
+      livePreview: 'Live preview',
+      openLive: 'Open live demo',
       viewCode: 'View code',
       featuresLabel: 'Key features',
       highlightsLabel: 'Highlights',
@@ -741,6 +751,8 @@ export const CONTENT: Record<Lang, Content> = {
       filters: { all: 'Todos', work: 'Profesional', personal: 'Personal' },
       liveLabel: 'En vivo',
       liveDemo: 'Demo en vivo',
+      livePreview: 'Vista en vivo',
+      openLive: 'Abrir demo en vivo',
       viewCode: 'Ver código',
       featuresLabel: 'Características',
       highlightsLabel: 'Aspectos destacados',
