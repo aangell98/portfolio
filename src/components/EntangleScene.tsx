@@ -1,17 +1,19 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import * as THREE from 'three'
 
 /* ============================================================================
  * Quantum Universe — a reimagining of the Entangle (TFG) cosmic web.
- * A tilted spiral galaxy of glowing quantum nodes (cyan / purple / green / gold
- * "bridge" stars) that ignites from a singularity on load, drifts through a
- * nebula, and weaves an entanglement network. Mouse acts as a gentle gravity.
+ * A tilted spiral galaxy of glowing quantum nodes that ignites from a
+ * singularity, weaves an entanglement network, fires entanglement flashes and
+ * lights up around the cursor (a gravity well). Camera-only parallax keeps it
+ * comfortable; a quality tier + offscreen pause keep it fast everywhere.
  * ========================================================================== */
 
-// Always-available pointer (works even when DOM overlays sit above the canvas).
+// Always-available pointer + scroll (work even under DOM overlays).
 const mouse = { x: 0, y: 0, tx: 0, ty: 0 }
+const view = { fade: 1 }
 
 const PALETTE = {
   cyan: new THREE.Color('#3FD2E8'),
@@ -21,18 +23,27 @@ const PALETTE = {
   gold: new THREE.Color('#FFC864'),
   blue: new THREE.Color('#4F86FF'),
 }
+const FLASH_COLORS = [PALETTE.glow, PALETTE.gold, PALETTE.cyan]
 
 const TAU = Math.PI * 2
-
-// Point the camera looks at (the galaxy core sits a touch right of centre).
 const GAZE = new THREE.Vector3(0.8, 0, 0)
+
+type Quality = 'high' | 'low'
+
+function detectQuality(): Quality {
+  if (typeof window === 'undefined') return 'high'
+  const coarse = window.matchMedia?.('(pointer: coarse)').matches
+  const mem = (navigator as unknown as { deviceMemory?: number }).deviceMemory ?? 8
+  const cores = navigator.hardwareConcurrency ?? 8
+  if (window.innerWidth < 768 || coarse || mem <= 4 || cores <= 4) return 'low'
+  return 'high'
+}
 
 /* Gaussian-ish random for natural scatter. */
 function gauss() {
   return (Math.random() + Math.random() + Math.random() - 1.5) / 1.5
 }
 
-/* Soft radial sprite for star halos (bright core, colored falloff). */
 function makeGlowTexture() {
   const s = 128
   const c = document.createElement('canvas')
@@ -51,7 +62,6 @@ function makeGlowTexture() {
   return tex
 }
 
-/* Very soft, wide sprite for nebula clouds. */
 function makeNebulaTexture() {
   const s = 256
   const c = document.createElement('canvas')
@@ -70,8 +80,8 @@ function makeNebulaTexture() {
 }
 
 /* ----------------------------------------------------------------------------
- * Shared star shader: genesis expansion from a singularity, Heisenberg jitter,
- * twinkle, and a glow-textured radiant sprite.
+ * Star shader: genesis expansion, Heisenberg jitter, twinkle, glow sprite,
+ * scroll fade and an optional cursor gravity well (screen-space brightening).
  * -------------------------------------------------------------------------- */
 const STAR_VERTEX = /* glsl */ `
   attribute float aScale;
@@ -81,27 +91,28 @@ const STAR_VERTEX = /* glsl */ `
   uniform float uProgress;
   uniform float uSize;
   uniform float uDpr;
+  uniform vec2 uMouse;
+  uniform float uAspect;
+  uniform float uInteractive;
   varying vec3 vColor;
   varying float vGlow;
+  varying float vHot;
 
   float easeOutCubic(float t){ t = clamp(t,0.0,1.0); return 1.0 - pow(1.0 - t, 3.0); }
 
   void main(){
     vColor = aColor;
 
-    // Staggered genesis: each star ignites and travels out from the core.
     float stagger = fract(aSeed * 3.7) * 0.5;
     float travel = clamp((uProgress - stagger) / 0.5, 0.0, 1.0);
     float eased = easeOutCubic(travel);
 
-    // Swirl while travelling outward (galactic rotation feel).
     float radial = length(position);
     vec3 dir = radial > 0.001 ? normalize(position) : vec3(0.0,0.0,1.0);
     vec3 tangent = normalize(cross(vec3(0.0,1.0,0.0), dir) + vec3(0.0001));
     float swirl = sin(eased * 3.14159) * radial * 0.18;
     vec3 pos = mix(vec3(0.0), position, eased) + tangent * swirl;
 
-    // Heisenberg jitter — quantum uncertainty once settled.
     float j = step(0.99, travel);
     pos += j * vec3(
       sin(uTime * 1.7 + aSeed * 17.3),
@@ -116,20 +127,32 @@ const STAR_VERTEX = /* glsl */ `
     float size = aScale * uSize * (0.55 + 0.45 * twinkle) * eased;
     gl_PointSize = clamp(size * (300.0 / -mv.z), 0.0, 90.0) * uDpr;
     gl_Position = projectionMatrix * mv;
+
+    // Cursor gravity well: brighten + enlarge nodes near the pointer (NDC space).
+    vec2 ndc = gl_Position.xy / max(gl_Position.w, 0.0001);
+    vec2 d = ndc - uMouse;
+    d.x *= uAspect;
+    float infl = uInteractive * smoothstep(0.26, 0.0, length(d)) * eased;
+    vHot = infl;
+    gl_PointSize *= (1.0 + infl * 1.3);
   }
 `
 
 const STAR_FRAGMENT = /* glsl */ `
   precision highp float;
   uniform sampler2D uMap;
+  uniform float uFade;
   varying vec3 vColor;
   varying float vGlow;
+  varying float vHot;
   void main(){
     vec4 tex = texture2D(uMap, gl_PointCoord);
     float d = length(gl_PointCoord - 0.5);
     float core = smoothstep(0.32, 0.0, d);
     vec3 col = vColor * vGlow + vec3(1.0) * core * 0.45 * vGlow;
-    gl_FragColor = vec4(col, tex.a * vGlow);
+    col += vColor * vHot * 1.1 + vec3(0.3) * vHot;
+    float a = tex.a * vGlow * (1.0 + vHot) * uFade;
+    gl_FragColor = vec4(col, a);
   }
 `
 
@@ -140,7 +163,6 @@ type StarField = {
   seeds: Float32Array
 }
 
-/* Spiral galaxy: dense warm core, cool sweeping arms, faint spherical halo. */
 function buildGalaxy(count: number, maxR: number): StarField {
   const positions = new Float32Array(count * 3)
   const colors = new Float32Array(count * 3)
@@ -155,7 +177,6 @@ function buildGalaxy(count: number, maxR: number): StarField {
     let x: number, y: number, z: number, rNorm: number
 
     if (haloStar) {
-      // Spherical halo for depth.
       const r = maxR * (0.5 + Math.random() * 0.7)
       const theta = Math.random() * TAU
       const phi = Math.acos(2 * Math.random() - 1)
@@ -164,7 +185,6 @@ function buildGalaxy(count: number, maxR: number): StarField {
       z = r * Math.sin(phi) * Math.sin(theta)
       rNorm = Math.min(r / maxR, 1)
     } else {
-      // Spiral arm.
       const r = Math.pow(Math.random(), 0.62) * maxR
       rNorm = r / maxR
       const arm = (i % ARMS) / ARMS * TAU
@@ -172,14 +192,13 @@ function buildGalaxy(count: number, maxR: number): StarField {
       const angle = arm + r * SPIN + gauss() * scatter
       x = Math.cos(angle) * r + gauss() * scatter * 0.6
       z = Math.sin(angle) * r + gauss() * scatter * 0.6
-      y = gauss() * (0.55 - rNorm * 0.35) // thinner disk outward
+      y = gauss() * (0.55 - rNorm * 0.35)
     }
 
     positions[i * 3] = x
     positions[i * 3 + 1] = y
     positions[i * 3 + 2] = z
 
-    // Colour: warm core (gold/purple) -> cool arms (cyan/green); rare bridge gold.
     const t = Math.random()
     if (Math.random() < 0.04) c.copy(PALETTE.gold)
     else if (rNorm < 0.32) c.copy(PALETTE.purple).lerp(PALETTE.gold, t * 0.5)
@@ -196,7 +215,6 @@ function buildGalaxy(count: number, maxR: number): StarField {
   return { positions, colors, scales, seeds }
 }
 
-/* Foreground entanglement network: bright bonded nodes + filaments. */
 function buildNetwork(count: number, radius: number) {
   const pts: THREE.Vector3[] = []
   const positions = new Float32Array(count * 3)
@@ -224,7 +242,6 @@ function buildNetwork(count: number, radius: number) {
     scales[i] = isBridge ? 2.6 + Math.random() * 1.2 : 1.1 + Math.random() * 1.1
     seeds[i] = Math.random()
   }
-  // Bonds between near neighbours (the collaboration web).
   const linePos: number[] = []
   const lineSeed: number[] = []
   const lineEnd: number[] = []
@@ -243,16 +260,27 @@ function buildNetwork(count: number, radius: number) {
   }
   return {
     field: { positions, colors, scales, seeds } as StarField,
+    pts,
     lines: new Float32Array(linePos),
     lineSeeds: new Float32Array(lineSeed),
     lineEnds: new Float32Array(lineEnd),
   }
 }
 
-function Stars({ field, size, progress }: { field: StarField; size: number; progress: React.MutableRefObject<number> }) {
+function Stars({
+  field,
+  size,
+  progress,
+  interactive = false,
+}: {
+  field: StarField
+  size: number
+  progress: React.MutableRefObject<number>
+  interactive?: boolean
+}) {
   const mat = useRef<THREE.ShaderMaterial>(null)
   const map = useMemo(makeGlowTexture, [])
-  const { gl } = useThree()
+  const { gl, size: viewport } = useThree()
   const uniforms = useMemo(
     () => ({
       uTime: { value: 0 },
@@ -260,13 +288,22 @@ function Stars({ field, size, progress }: { field: StarField; size: number; prog
       uSize: { value: size },
       uDpr: { value: Math.min(gl.getPixelRatio(), 2) },
       uMap: { value: map },
+      uFade: { value: 1 },
+      uMouse: { value: new THREE.Vector2(0, 0) },
+      uAspect: { value: 1 },
+      uInteractive: { value: interactive ? 1 : 0 },
     }),
-    [map, size, gl],
+    [map, size, gl, interactive],
   )
   useFrame((s) => {
-    if (mat.current) {
-      mat.current.uniforms.uTime.value = s.clock.elapsedTime
-      mat.current.uniforms.uProgress.value = progress.current
+    const u = mat.current?.uniforms
+    if (!u) return
+    u.uTime.value = s.clock.elapsedTime
+    u.uProgress.value = progress.current
+    u.uFade.value = view.fade
+    if (interactive) {
+      u.uMouse.value.set(mouse.tx, -mouse.ty)
+      u.uAspect.value = viewport.width / viewport.height
     }
   })
   return (
@@ -307,32 +344,43 @@ const BOND_FRAGMENT = /* glsl */ `
   precision highp float;
   uniform float uTime;
   uniform float uProgress;
+  uniform float uFade;
   uniform vec3 uColor;
   varying float vSeed;
   varying float vEnd;
   void main(){
     float p = clamp(uProgress, 0.0, 1.0);
     float flow = 0.4 + 0.4 * sin(uTime * 1.1 + vSeed * 18.0);
-    // A packet of entanglement energy travels from one node to the other.
     float head = fract(uTime * 0.22 + vSeed);
     float pulse = smoothstep(0.16, 0.0, abs(vEnd - head));
     vec3 col = uColor + vec3(0.45, 0.65, 0.8) * pulse;
-    float alpha = (0.13 * flow + pulse * 0.6) * p;
+    float alpha = (0.13 * flow + pulse * 0.6) * p * uFade;
     gl_FragColor = vec4(col, alpha);
   }
 `
 
-function Bonds({ lines, seeds, ends, progress }: { lines: Float32Array; seeds: Float32Array; ends: Float32Array; progress: React.MutableRefObject<number> }) {
+function Bonds({
+  lines,
+  seeds,
+  ends,
+  progress,
+}: {
+  lines: Float32Array
+  seeds: Float32Array
+  ends: Float32Array
+  progress: React.MutableRefObject<number>
+}) {
   const mat = useRef<THREE.ShaderMaterial>(null)
   const uniforms = useMemo(
-    () => ({ uTime: { value: 0 }, uProgress: { value: 0 }, uColor: { value: PALETTE.cyan.clone() } }),
+    () => ({ uTime: { value: 0 }, uProgress: { value: 0 }, uFade: { value: 1 }, uColor: { value: PALETTE.cyan.clone() } }),
     [],
   )
   useFrame((s) => {
-    if (mat.current) {
-      mat.current.uniforms.uTime.value = s.clock.elapsedTime
-      mat.current.uniforms.uProgress.value = progress.current
-    }
+    const u = mat.current?.uniforms
+    if (!u) return
+    u.uTime.value = s.clock.elapsedTime
+    u.uProgress.value = progress.current
+    u.uFade.value = view.fade
   })
   return (
     <lineSegments>
@@ -351,6 +399,83 @@ function Bonds({ lines, seeds, ends, progress }: { lines: Float32Array; seeds: F
         blending={THREE.AdditiveBlending}
       />
     </lineSegments>
+  )
+}
+
+/* Entanglement flashes: bright arcs snap between distant nodes, then fade. */
+function Flashes({ pts, progress, count = 3 }: { pts: THREE.Vector3[]; progress: React.MutableRefObject<number>; count?: number }) {
+  const POINTS = 30
+  type Flash = { line: THREE.Line; mat: THREE.LineBasicMaterial; t: number; dur: number; delay: number; spawned: boolean }
+  const lines = useMemo(() => {
+    const arr: Flash[] = []
+    for (let i = 0; i < count; i++) {
+      const geo = new THREE.BufferGeometry()
+      geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(POINTS * 3), 3))
+      const mat = new THREE.LineBasicMaterial({
+        transparent: true,
+        opacity: 0,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false,
+        color: FLASH_COLORS[i % FLASH_COLORS.length].clone(),
+      })
+      arr.push({ line: new THREE.Line(geo, mat), mat, t: 0, dur: 1, delay: Math.random() * 3, spawned: false })
+    }
+    return arr
+  }, [count])
+
+  const spawn = (f: Flash) => {
+    if (pts.length < 2) return
+    const a = pts[Math.floor(Math.random() * pts.length)]
+    let b = pts[Math.floor(Math.random() * pts.length)]
+    let guard = 0
+    while ((b === a || a.distanceTo(b) < 3) && guard++ < 8) b = pts[Math.floor(Math.random() * pts.length)]
+    const dir = b.clone().sub(a)
+    const len = dir.length()
+    const perp = new THREE.Vector3(0, 1, 0).cross(dir)
+    if (perp.lengthSq() < 0.0001) perp.set(1, 0, 0)
+    perp.normalize()
+    const mid = a.clone().add(b).multiplyScalar(0.5).add(perp.multiplyScalar(len * 0.28)).add(new THREE.Vector3(0, len * 0.18, 0))
+    const curve = new THREE.QuadraticBezierCurve3(a.clone(), mid, b.clone())
+    const samples = curve.getPoints(POINTS - 1)
+    const attr = f.line.geometry.getAttribute('position') as THREE.BufferAttribute
+    for (let i = 0; i < POINTS; i++) attr.setXYZ(i, samples[i].x, samples[i].y, samples[i].z)
+    attr.needsUpdate = true
+    f.t = 0
+    f.dur = 0.8 + Math.random() * 0.9
+    f.mat.color.copy(FLASH_COLORS[Math.floor(Math.random() * FLASH_COLORS.length)])
+    f.spawned = true
+  }
+
+  useFrame((_s, delta) => {
+    const ready = progress.current > 0.9
+    for (const f of lines) {
+      if (!ready) {
+        f.mat.opacity = 0
+        continue
+      }
+      if (f.delay > 0) {
+        f.delay -= delta
+        continue
+      }
+      if (!f.spawned) spawn(f)
+      f.t += delta
+      const k = f.t / f.dur
+      if (k >= 1) {
+        f.mat.opacity = 0
+        f.spawned = false
+        f.delay = 0.6 + Math.random() * 3.0
+      } else {
+        f.mat.opacity = Math.sin(k * Math.PI) * 0.85 * view.fade
+      }
+    }
+  })
+
+  return (
+    <group>
+      {lines.map((f, i) => (
+        <primitive key={i} object={f.line} />
+      ))}
+    </group>
   )
 }
 
@@ -377,6 +502,7 @@ function Nebula() {
       if (sp) {
         sp.position.x = c.pos[0] + Math.sin(t * 0.08 + c.phase) * 0.7
         sp.position.y = c.pos[1] + Math.cos(t * 0.06 + c.phase) * 0.5
+        ;(sp.material as THREE.SpriteMaterial).opacity = 0.17 * view.fade
       }
     })
   })
@@ -384,14 +510,7 @@ function Nebula() {
     <group>
       {clouds.map((c, i) => (
         <sprite key={i} ref={(el) => (refs.current[i] = el)} position={c.pos} scale={[c.scale, c.scale, 1]}>
-          <spriteMaterial
-            map={map}
-            color={c.color}
-            transparent
-            opacity={0.17}
-            depthWrite={false}
-            blending={THREE.AdditiveBlending}
-          />
+          <spriteMaterial map={map} color={c.color} transparent opacity={0.17} depthWrite={false} blending={THREE.AdditiveBlending} />
         </sprite>
       ))}
     </group>
@@ -405,6 +524,7 @@ function CoreGlow() {
     if (ref.current) {
       const p = 1.0 + Math.sin(s.clock.elapsedTime * 1.2) * 0.06
       ref.current.scale.set(3.4 * p, 3.4 * p, 1)
+      ;(ref.current.material as THREE.SpriteMaterial).opacity = 0.55 * view.fade
     }
   })
   return (
@@ -414,13 +534,12 @@ function CoreGlow() {
   )
 }
 
-function Universe() {
+function Universe({ quality }: { quality: Quality }) {
   const group = useRef<THREE.Group>(null)
   const progress = useRef(0)
-  const galaxy = useMemo(() => buildGalaxy(4200, 6.2), [])
-  const network = useMemo(() => buildNetwork(190, 5.0), [])
+  const galaxy = useMemo(() => buildGalaxy(quality === 'low' ? 1500 : 4200, 6.2), [quality])
+  const network = useMemo(() => buildNetwork(quality === 'low' ? 120 : 190, 5.0), [quality])
 
-  // Respect reduced-motion: skip the genesis and idle rotation.
   const reduced = useMemo(
     () => typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches,
     [],
@@ -429,13 +548,9 @@ function Universe() {
 
   useFrame((state, delta) => {
     if (progress.current < 1) progress.current = Math.min(1, progress.current + delta / 2.6)
-    // Heavily damped pointer for a calm, floaty feel.
     mouse.tx += (mouse.x - mouse.tx) * 0.04
     mouse.ty += (mouse.y - mouse.ty) * 0.04
-    // The galaxy keeps a slow, constant spin and never reacts to the mouse
-    // (reacting with the whole scene was what caused the motion sickness).
     if (group.current && !reduced) group.current.rotation.y += delta * 0.03
-    // Comfortable depth: gently orbit the camera and always look at the core.
     const cam = state.camera
     const ax = reduced ? 0 : mouse.tx * 0.6
     const ay = reduced ? 0 : mouse.ty * 0.35
@@ -450,33 +565,61 @@ function Universe() {
       <Nebula />
       <Stars field={galaxy} size={1.05} progress={progress} />
       <Bonds lines={network.lines} seeds={network.lineSeeds} ends={network.lineEnds} progress={progress} />
-      <Stars field={network.field} size={1.25} progress={progress} />
+      <Stars field={network.field} size={1.25} progress={progress} interactive={quality === 'high'} />
+      {quality === 'high' && <Flashes pts={network.pts} progress={progress} />}
     </group>
   )
 }
 
 export default function EntangleScene() {
+  const quality = useMemo(detectQuality, [])
+  const [active, setActive] = useState(true)
+  const wrapRef = useRef<HTMLDivElement>(null)
+
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
       mouse.x = (e.clientX / window.innerWidth) * 2 - 1
       mouse.y = (e.clientY / window.innerHeight) * 2 - 1
     }
+    const onScroll = () => {
+      const h = window.innerHeight * 0.85
+      view.fade = Math.max(0, Math.min(1, 1 - window.scrollY / h))
+    }
+    onScroll()
     window.addEventListener('mousemove', onMove)
-    return () => window.removeEventListener('mousemove', onMove)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => {
+      window.removeEventListener('mousemove', onMove)
+      window.removeEventListener('scroll', onScroll)
+    }
+  }, [])
+
+  // Pause rendering while the hero is scrolled out of view.
+  useEffect(() => {
+    const el = wrapRef.current
+    if (!el) return
+    const io = new IntersectionObserver(([e]) => setActive(e.isIntersecting), { threshold: 0 })
+    io.observe(el)
+    return () => io.disconnect()
   }, [])
 
   return (
-    <Canvas
-      className="!absolute inset-0"
-      dpr={[1, 2]}
-      camera={{ position: [0, 0.6, 11], fov: 52 }}
-      gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
-      onCreated={({ gl }) => gl.setClearColor('#05080f', 1)}
-    >
-      <Universe />
-      <EffectComposer>
-        <Bloom intensity={0.95} luminanceThreshold={0.0} luminanceSmoothing={0.9} mipmapBlur radius={0.72} />
-      </EffectComposer>
-    </Canvas>
+    <div ref={wrapRef} className="absolute inset-0">
+      <Canvas
+        className="!absolute inset-0"
+        frameloop={active ? 'always' : 'never'}
+        dpr={quality === 'low' ? [1, 1.5] : [1, 2]}
+        camera={{ position: [0, 0.6, 11], fov: 52 }}
+        gl={{ antialias: quality === 'high', alpha: false, powerPreference: 'high-performance' }}
+        onCreated={({ gl }) => gl.setClearColor('#05080f', 1)}
+      >
+        <Universe quality={quality} />
+        {quality === 'high' && (
+          <EffectComposer>
+            <Bloom intensity={0.95} luminanceThreshold={0.0} luminanceSmoothing={0.9} mipmapBlur radius={0.72} />
+          </EffectComposer>
+        )}
+      </Canvas>
+    </div>
   )
 }
