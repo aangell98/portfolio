@@ -1,10 +1,8 @@
 import { useI18n } from '../i18n'
-import { LINKS } from '../data/content'
 import Reveal, { Kicker } from './ui/Reveal'
 
 export default function Certifications() {
-  const { t, lang } = useI18n()
-  const verifyUrl = lang === 'es' ? LINKS.learnEs : LINKS.learn
+  const { t } = useI18n()
 
   return (
     <section className="relative mx-auto max-w-6xl px-6 py-16">
@@ -26,7 +24,7 @@ export default function Certifications() {
             {t.certs.items.map((c, i) => (
               <Reveal key={c.code} i={i}>
                 <a
-                  href={verifyUrl}
+                  href={c.url}
                   target="_blank"
                   rel="noreferrer"
                   className="group block rounded-2xl border border-white/8 bg-gradient-to-br from-brand/20 to-transparent p-5 transition-all duration-300 hover:-translate-y-1 hover:border-cyan/40"

@@ -16,19 +16,24 @@ export function TechIcon({ name, size = 22 }: { name: string; size?: number }) {
 }
 
 const MONO: Record<string, { text: string; bg: string; fg: string }> = {
-  tcs: { text: 'TCS', bg: '#0b1f4d', fg: '#7aa2ff' },
   uclm: { text: 'UCLM', bg: '#7a1f2b', fg: '#ff9aa6' },
   ies: { text: 'IES', bg: '#0e2a22', fg: '#5fe0c8' },
 }
 
+const IMG_ORGS: Record<string, { src: string; alt: string }> = {
+  microsoft: { src: 'orgs/microsoft.svg', alt: 'Microsoft' },
+  tcs: { src: 'orgs/tcs.png', alt: 'Tata Consultancy Services' },
+}
+
 export function OrgLogo({ name, size = 44 }: { name: string; size?: number }) {
-  if (name === 'microsoft') {
+  const img = IMG_ORGS[name]
+  if (img) {
     return (
       <span
         className="grid shrink-0 place-items-center rounded-xl bg-white p-2 shadow-sm"
         style={{ width: size, height: size }}
       >
-        <img src={asset('orgs/microsoft.svg')} alt="Microsoft" width={size - 16} height={size - 16} />
+        <img src={asset(img.src)} alt={img.alt} className="h-full w-full object-contain" />
       </span>
     )
   }

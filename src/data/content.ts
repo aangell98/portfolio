@@ -61,7 +61,7 @@ export interface Content {
     more: string
   }
   skills: { kicker: string; heading: string; sub: string; concepts: string; conceptItems: string[] }
-  certs: { kicker: string; heading: string; sub: string; verify: string; items: { code: string; name: string }[] }
+  certs: { kicker: string; heading: string; sub: string; verify: string; items: { code: string; name: string; url: string }[] }
   contact: {
     kicker: string
     heading: string
@@ -354,9 +354,9 @@ export const CONTENT: Record<Lang, Content> = {
       sub: 'Microsoft certified. Click any badge to verify on Microsoft Learn.',
       verify: 'Verify on Microsoft Learn',
       items: [
-        { code: 'AZ-900', name: 'Azure Fundamentals' },
-        { code: 'DP-900', name: 'Data Fundamentals' },
-        { code: 'AI-900', name: 'AI Fundamentals' },
+        { code: 'AZ-900', name: 'Azure Fundamentals', url: 'https://learn.microsoft.com/en-us/users/angelluislaramartin-9888/credentials/4a28e43bae9bd17?ref=https%3A%2F%2Fwww.linkedin.com%2F' },
+        { code: 'DP-900', name: 'Data Fundamentals', url: 'https://learn.microsoft.com/en-us/users/angelluislaramartin-9888/credentials/af6a368f9fa5ac25?ref=https%3A%2F%2Fwww.linkedin.com%2F' },
+        { code: 'AI-900', name: 'AI Fundamentals', url: 'https://learn.microsoft.com/en-us/users/angelluislaramartin-9888/credentials/75ed5e0b82e24c7f?ref=https%3A%2F%2Fwww.linkedin.com%2F' },
       ],
     },
     contact: {
@@ -486,9 +486,9 @@ export const CONTENT: Record<Lang, Content> = {
       sub: 'Certificado por Microsoft. Pulsa cualquier insignia para verificar en Microsoft Learn.',
       verify: 'Verificar en Microsoft Learn',
       items: [
-        { code: 'AZ-900', name: 'Azure Fundamentals' },
-        { code: 'DP-900', name: 'Data Fundamentals' },
-        { code: 'AI-900', name: 'AI Fundamentals' },
+        { code: 'AZ-900', name: 'Azure Fundamentals', url: 'https://learn.microsoft.com/en-us/users/angelluislaramartin-9888/credentials/4a28e43bae9bd17?ref=https%3A%2F%2Fwww.linkedin.com%2F' },
+        { code: 'DP-900', name: 'Data Fundamentals', url: 'https://learn.microsoft.com/en-us/users/angelluislaramartin-9888/credentials/af6a368f9fa5ac25?ref=https%3A%2F%2Fwww.linkedin.com%2F' },
+        { code: 'AI-900', name: 'AI Fundamentals', url: 'https://learn.microsoft.com/en-us/users/angelluislaramartin-9888/credentials/75ed5e0b82e24c7f?ref=https%3A%2F%2Fwww.linkedin.com%2F' },
       ],
     },
     contact: {
