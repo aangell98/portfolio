@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import * as THREE from 'three'
+import { detectQuality, type Quality } from '../lib/quality'
 
 /* ============================================================================
  * Quantum Universe — a reimagining of the Entangle (TFG) cosmic web.
@@ -27,17 +28,6 @@ const FLASH_COLORS = [PALETTE.glow, PALETTE.gold, PALETTE.cyan]
 
 const TAU = Math.PI * 2
 const GAZE = new THREE.Vector3(0.8, 0, 0)
-
-type Quality = 'high' | 'low'
-
-function detectQuality(): Quality {
-  if (typeof window === 'undefined') return 'high'
-  const coarse = window.matchMedia?.('(pointer: coarse)').matches
-  const mem = (navigator as unknown as { deviceMemory?: number }).deviceMemory ?? 8
-  const cores = navigator.hardwareConcurrency ?? 8
-  if (window.innerWidth < 768 || coarse || mem <= 4 || cores <= 4) return 'low'
-  return 'high'
-}
 
 /* Gaussian-ish random for natural scatter. */
 function gauss() {

@@ -1,14 +1,50 @@
 import { Suspense, lazy, useEffect, useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useReducedMotion } from 'framer-motion'
 import { useI18n } from '../i18n'
 import { LINKS } from '../data/content'
+import { detectQuality } from '../lib/quality'
+import { asset } from './ui/Icons'
 import Magnetic from './ui/Magnetic'
 
 const EntangleScene = lazy(() => import('./EntangleScene'))
 
+/**
+ * Lightweight galaxy backdrop for low-power devices: a pre-rendered poster with
+ * a gentle compositor-only drift. Avoids loading the heavy WebGL scene so phones
+ * never freeze on the entry animation.
+ */
+function HeroPoster() {
+  const reduce = useReducedMotion()
+  return (
+    <div className="absolute inset-0 overflow-hidden bg-ink">
+      <motion.div
+        className="absolute inset-0 bg-cover"
+        style={{ backgroundImage: `url(${asset('galaxy-poster.webp')})`, backgroundPosition: 'center' }}
+        initial={{ opacity: 0, scale: 1.06 }}
+        animate={
+          reduce
+            ? { opacity: 1, scale: 1.06 }
+            : { opacity: 1, scale: [1.06, 1.12, 1.06], x: [0, -10, 0], y: [0, 8, 0] }
+        }
+        transition={
+          reduce
+            ? { opacity: { duration: 1 } }
+            : {
+                opacity: { duration: 1.2, ease: 'easeOut' },
+                scale: { duration: 28, repeat: Infinity, ease: 'easeInOut' },
+                x: { duration: 28, repeat: Infinity, ease: 'easeInOut' },
+                y: { duration: 34, repeat: Infinity, ease: 'easeInOut' },
+              }
+        }
+      />
+    </div>
+  )
+}
+
 export default function Hero() {
   const { t, lang } = useI18n()
   const [role, setRole] = useState(0)
+  const [quality] = useState(detectQuality)
 
   useEffect(() => {
     const id = setInterval(() => setRole((r) => (r + 1) % t.hero.roles.length), 2600)
@@ -19,11 +55,15 @@ export default function Hero() {
 
   return (
     <section id="home" className="relative min-h-[100svh] w-full overflow-hidden">
-      {/* 3D background */}
+      {/* 3D background on capable devices; static poster on low-power / mobile */}
       <div className="absolute inset-0 z-0">
-        <Suspense fallback={null}>
-          <EntangleScene />
-        </Suspense>
+        {quality === 'high' ? (
+          <Suspense fallback={<HeroPoster />}>
+            <EntangleScene />
+          </Suspense>
+        ) : (
+          <HeroPoster />
+        )}
       </div>
 
       {/* legibility gradients over the universe */}
