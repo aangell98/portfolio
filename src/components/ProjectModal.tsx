@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useI18n } from '../i18n'
 import type { ProjectItem } from '../data/content'
@@ -26,7 +27,7 @@ export default function ProjectModal({ project, onClose }: { project: ProjectIte
     }
   }, [project, onClose])
 
-  return (
+  return createPortal(
     <AnimatePresence>
       {project && (
         <motion.div
@@ -34,7 +35,7 @@ export default function ProjectModal({ project, onClose }: { project: ProjectIte
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="fixed inset-0 z-[80] flex items-end justify-center bg-ink/80 p-0 backdrop-blur-md sm:items-center sm:p-6"
+          className="fixed inset-0 z-[100] flex items-end justify-center bg-ink/85 p-0 backdrop-blur-md sm:items-center sm:p-6"
         >
           <motion.div
             initial={{ y: 40, opacity: 0, scale: 0.98 }}
@@ -156,6 +157,7 @@ export default function ProjectModal({ project, onClose }: { project: ProjectIte
           </motion.div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body,
   )
 }

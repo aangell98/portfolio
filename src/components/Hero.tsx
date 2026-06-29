@@ -20,7 +20,7 @@ export default function Hero() {
   return (
     <section id="home" className="relative min-h-[100svh] w-full overflow-hidden">
       {/* 3D background */}
-      <div className="absolute inset-0 z-0 lg:left-[30%]">
+      <div className="absolute inset-0 z-0">
         <Suspense fallback={null}>
           <EntangleScene />
         </Suspense>

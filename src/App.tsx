@@ -1,7 +1,6 @@
 import { motion, useScroll, useSpring } from 'framer-motion'
 import { LanguageProvider } from './i18n'
 import { useLenis } from './hooks/useLenis'
-import Cursor from './components/Cursor'
 import Nav from './components/Nav'
 import Hero from './components/Hero'
 import About from './components/About'
@@ -41,7 +40,6 @@ function Shell() {
       </div>
       <div className="grain pointer-events-none fixed inset-0 z-[1]" />
 
-      <Cursor />
       <ScrollProgress />
       <Nav />
 
