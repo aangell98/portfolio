@@ -27,13 +27,16 @@ export default function Skills() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-40px' }}
             transition={{ duration: 0.5, delay: (i % 5) * 0.05 + Math.floor(i / 5) * 0.05 }}
-            data-hover
-            className="group glass flex flex-col items-center justify-center gap-3 rounded-2xl px-3 py-5 transition-all duration-300 hover:-translate-y-1.5 hover:border-cyan/40"
           >
-            <span className="grid h-12 w-12 place-items-center rounded-xl bg-white/90 p-2 shadow-sm transition-transform duration-300 group-hover:scale-110">
-              <img src={asset(`tech/${s.key}.svg`)} alt={s.label} className="h-full w-full object-contain" loading="lazy" />
-            </span>
-            <span className="text-xs font-medium text-mist/70 transition-colors group-hover:text-white">{s.label}</span>
+            <div
+              data-hover
+              className="group flex h-full flex-col items-center justify-center gap-3 rounded-2xl border border-cyan/12 bg-[#0e1730]/70 px-3 py-5 transition-[transform,border-color,background-color] duration-300 hover:-translate-y-1.5 hover:border-cyan/40 hover:bg-[#0e1730]/90"
+            >
+              <span className="grid h-12 w-12 place-items-center rounded-xl bg-white/90 p-2 shadow-sm transition-transform duration-300 group-hover:scale-110">
+                <img src={asset(`tech/${s.key}.svg`)} alt={s.label} className="h-full w-full object-contain" loading="lazy" />
+              </span>
+              <span className="text-xs font-medium text-mist/70 transition-colors group-hover:text-white">{s.label}</span>
+            </div>
           </motion.div>
         ))}
       </div>
@@ -41,16 +44,20 @@ export default function Skills() {
       <Reveal i={1}>
         <p className="mt-12 text-sm font-mono uppercase tracking-widest text-mist/50">{t.skills.concepts}</p>
       </Reveal>
-      <div className="mt-4 flex flex-wrap gap-2.5">
+      <div className="mt-5 flex flex-wrap gap-2.5 sm:gap-3">
         {t.skills.conceptItems.map((c, i) => (
-          <Reveal key={c} i={i}>
-            <span
-              data-hover
-              className="cursor-default rounded-lg border border-white/8 bg-white/[0.03] px-4 py-2 text-sm text-mist/80 transition-all duration-200 hover:-translate-y-0.5 hover:border-cyan/40 hover:text-cyan"
-            >
-              {c}
-            </span>
-          </Reveal>
+          <motion.span
+            key={c}
+            data-hover
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-40px' }}
+            transition={{ duration: 0.5, delay: Math.min(i * 0.05, 0.4) }}
+            whileHover={{ y: -3 }}
+            className="inline-flex cursor-default items-center rounded-xl border border-white/10 bg-white/[0.03] px-5 py-2.5 text-[15px] text-mist/80 transition-colors duration-200 hover:border-cyan/40 hover:text-cyan"
+          >
+            {c}
+          </motion.span>
         ))}
       </div>
     </section>
