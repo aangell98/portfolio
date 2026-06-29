@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useI18n } from '../i18n'
 import Reveal, { Kicker } from './ui/Reveal'
+import { OrgLogo } from './ui/Icons'
 import type { ExpItem } from '../data/content'
 
 function TimelineItem({ item, i }: { item: ExpItem; i: number }) {
@@ -12,15 +13,20 @@ function TimelineItem({ item, i }: { item: ExpItem; i: number }) {
           <span className="h-2.5 w-2.5 rounded-full bg-cyan shadow-[0_0_12px_rgba(70,199,224,0.8)]" />
         </span>
         <div className="glass rounded-2xl p-6 transition-transform duration-300 hover:-translate-y-1">
-          <div className="flex flex-wrap items-center gap-3">
-            <h3 className="text-lg font-bold text-white">{item.role}</h3>
-            <span className="rounded-full border border-cyan/20 bg-cyan/5 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-cyan">
-              {item.tag}
-            </span>
-          </div>
-          <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
-            <span className="font-medium text-mist/90">{item.org}</span>
-            <span className="font-mono text-xs text-mist/50">{item.date}</span>
+          <div className="flex items-start gap-4">
+            <OrgLogo name={item.logo} />
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-3">
+                <h3 className="text-lg font-bold text-white">{item.role}</h3>
+                <span className="rounded-full border border-cyan/20 bg-cyan/5 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-cyan">
+                  {item.tag}
+                </span>
+              </div>
+              <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm">
+                <span className="font-medium text-mist/90">{item.org}</span>
+                <span className="font-mono text-xs text-mist/50">{item.date}</span>
+              </div>
+            </div>
           </div>
           <ul className="mt-4 space-y-2">
             {item.bullets.map((b, j) => (
@@ -73,16 +79,19 @@ export default function Experience() {
             {t.education.items.map((item, i) => (
               <Reveal key={i} i={i + 1}>
                 <div className="glass rounded-2xl p-6 transition-transform duration-300 hover:-translate-y-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <h3 className="text-base font-bold text-white">{item.role}</h3>
+                  <div className="flex items-start gap-4">
+                    <OrgLogo name={item.logo} />
+                    <div className="min-w-0 flex-1">
+                      <h3 className="text-base font-bold text-white">{item.role}</h3>
+                      <div className="mt-1 flex flex-wrap items-center gap-x-3 text-sm">
+                        <span className="font-medium text-mist/90">{item.org}</span>
+                        <span className="font-mono text-xs text-mist/50">{item.date}</span>
+                      </div>
+                      <span className="mt-2 inline-block rounded-full border border-cyan/20 bg-cyan/5 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-cyan">
+                        {item.tag}
+                      </span>
+                    </div>
                   </div>
-                  <div className="mt-1 flex flex-wrap items-center gap-x-3 text-sm">
-                    <span className="font-medium text-mist/90">{item.org}</span>
-                    <span className="font-mono text-xs text-mist/50">{item.date}</span>
-                  </div>
-                  <span className="mt-3 inline-block rounded-full border border-cyan/20 bg-cyan/5 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-wider text-cyan">
-                    {item.tag}
-                  </span>
                   <ul className="mt-4 space-y-2">
                     {item.bullets.map((b, j) => (
                       <li key={j} className="flex gap-2 text-sm leading-relaxed text-mist/70">
