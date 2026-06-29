@@ -24,6 +24,9 @@ const PALETTE = {
 
 const TAU = Math.PI * 2
 
+// Point the camera looks at (the galaxy core sits a touch right of centre).
+const GAZE = new THREE.Vector3(0.8, 0, 0)
+
 /* Gaussian-ish random for natural scatter. */
 function gauss() {
   return (Math.random() + Math.random() + Math.random() - 1.5) / 1.5
@@ -224,6 +227,7 @@ function buildNetwork(count: number, radius: number) {
   // Bonds between near neighbours (the collaboration web).
   const linePos: number[] = []
   const lineSeed: number[] = []
+  const lineEnd: number[] = []
   const maxDist = radius * 0.42
   for (let i = 0; i < count; i++) {
     let links = 0
@@ -232,6 +236,7 @@ function buildNetwork(count: number, radius: number) {
         linePos.push(pts[i].x, pts[i].y, pts[i].z, pts[j].x, pts[j].y, pts[j].z)
         const s = Math.random()
         lineSeed.push(s, s)
+        lineEnd.push(0, 1)
         links++
       }
     }
@@ -240,6 +245,7 @@ function buildNetwork(count: number, radius: number) {
     field: { positions, colors, scales, seeds } as StarField,
     lines: new Float32Array(linePos),
     lineSeeds: new Float32Array(lineSeed),
+    lineEnds: new Float32Array(lineEnd),
   }
 }
 
@@ -286,10 +292,13 @@ function Stars({ field, size, progress }: { field: StarField; size: number; prog
 
 const BOND_VERTEX = /* glsl */ `
   attribute float aSeed;
+  attribute float aEnd;
   uniform float uProgress;
   varying float vSeed;
+  varying float vEnd;
   void main(){
     vSeed = aSeed;
+    vEnd = aEnd;
     vec4 mv = modelViewMatrix * vec4(position * clamp(uProgress, 0.0, 1.0), 1.0);
     gl_Position = projectionMatrix * mv;
   }
@@ -300,13 +309,20 @@ const BOND_FRAGMENT = /* glsl */ `
   uniform float uProgress;
   uniform vec3 uColor;
   varying float vSeed;
+  varying float vEnd;
   void main(){
-    float flow = 0.45 + 0.55 * sin(uTime * 1.4 + vSeed * 18.0);
-    gl_FragColor = vec4(uColor, 0.16 * flow * clamp(uProgress, 0.0, 1.0));
+    float p = clamp(uProgress, 0.0, 1.0);
+    float flow = 0.4 + 0.4 * sin(uTime * 1.1 + vSeed * 18.0);
+    // A packet of entanglement energy travels from one node to the other.
+    float head = fract(uTime * 0.22 + vSeed);
+    float pulse = smoothstep(0.16, 0.0, abs(vEnd - head));
+    vec3 col = uColor + vec3(0.45, 0.65, 0.8) * pulse;
+    float alpha = (0.13 * flow + pulse * 0.6) * p;
+    gl_FragColor = vec4(col, alpha);
   }
 `
 
-function Bonds({ lines, seeds, progress }: { lines: Float32Array; seeds: Float32Array; progress: React.MutableRefObject<number> }) {
+function Bonds({ lines, seeds, ends, progress }: { lines: Float32Array; seeds: Float32Array; ends: Float32Array; progress: React.MutableRefObject<number> }) {
   const mat = useRef<THREE.ShaderMaterial>(null)
   const uniforms = useMemo(
     () => ({ uTime: { value: 0 }, uProgress: { value: 0 }, uColor: { value: PALETTE.cyan.clone() } }),
@@ -323,6 +339,7 @@ function Bonds({ lines, seeds, progress }: { lines: Float32Array; seeds: Float32
       <bufferGeometry>
         <bufferAttribute attach="attributes-position" args={[lines, 3]} />
         <bufferAttribute attach="attributes-aSeed" args={[seeds, 1]} />
+        <bufferAttribute attach="attributes-aEnd" args={[ends, 1]} />
       </bufferGeometry>
       <shaderMaterial
         ref={mat}
@@ -410,25 +427,29 @@ function Universe() {
   )
   if (reduced && progress.current === 0) progress.current = 1
 
-  useFrame((_state, delta) => {
+  useFrame((state, delta) => {
     if (progress.current < 1) progress.current = Math.min(1, progress.current + delta / 2.6)
-    mouse.tx += (mouse.x - mouse.tx) * 0.05
-    mouse.ty += (mouse.y - mouse.ty) * 0.05
-    if (group.current) {
-      group.current.rotation.y += delta * (reduced ? 0.0 : 0.045)
-      group.current.rotation.x = THREE.MathUtils.lerp(group.current.rotation.x, -0.95 + mouse.ty * 0.28, 0.06)
-      group.current.rotation.z = THREE.MathUtils.lerp(group.current.rotation.z, mouse.tx * 0.06, 0.06)
-      group.current.position.x = THREE.MathUtils.lerp(group.current.position.x, 1.4 + mouse.tx * 0.7, 0.05)
-      group.current.position.y = THREE.MathUtils.lerp(group.current.position.y, -mouse.ty * 0.45, 0.05)
-    }
+    // Heavily damped pointer for a calm, floaty feel.
+    mouse.tx += (mouse.x - mouse.tx) * 0.04
+    mouse.ty += (mouse.y - mouse.ty) * 0.04
+    // The galaxy keeps a slow, constant spin and never reacts to the mouse
+    // (reacting with the whole scene was what caused the motion sickness).
+    if (group.current && !reduced) group.current.rotation.y += delta * 0.03
+    // Comfortable depth: gently orbit the camera and always look at the core.
+    const cam = state.camera
+    const ax = reduced ? 0 : mouse.tx * 0.6
+    const ay = reduced ? 0 : mouse.ty * 0.35
+    cam.position.x += (ax - cam.position.x) * 0.03
+    cam.position.y += (0.55 + ay - cam.position.y) * 0.03
+    cam.lookAt(GAZE)
   })
 
   return (
-    <group ref={group} rotation={[-0.95, 0, 0]}>
+    <group ref={group} position={[1.3, 0, 0]} rotation={[-0.95, 0, 0]}>
       <CoreGlow />
       <Nebula />
       <Stars field={galaxy} size={1.05} progress={progress} />
-      <Bonds lines={network.lines} seeds={network.lineSeeds} progress={progress} />
+      <Bonds lines={network.lines} seeds={network.lineSeeds} ends={network.lineEnds} progress={progress} />
       <Stars field={network.field} size={1.25} progress={progress} />
     </group>
   )
