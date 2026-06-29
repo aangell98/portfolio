@@ -1,15 +1,29 @@
-# Portfolio - Angel Luis Lara Martin
+# Portfolio - Ángel Luis Lara Martín
 
-Computer Engineer focused on Cloud and AI. This is the home of my personal portfolio (in progress).
+Personal portfolio website. Computer Engineer specialized in Cloud and AI.
 
-- Microsoft Cloud and AI Specialist Intern
-- BSc Computer Engineering, University of Castilla-La Mancha (Information Systems)
-- Certs: AZ-900, DP-900, AI-900
+Live: https://aangell98.github.io/portfolio/
 
-## Featured project: Entangle (Bachelor's Thesis)
-Mapping, analysis and visualization of the open-source quantum computing ecosystem on GitHub: a config-driven, 6-worker AI agent with RAG over a vector store, scoring and visualization. Modularity 0.96, 1,087 automated tests.
+## Tech
+
+- React + Vite + TypeScript
+- Tailwind CSS
+- Framer Motion (scroll and UI animations)
+- Three.js via React Three Fiber (3D particle network)
+- Lenis (smooth scroll)
+- Bilingual (English and Spanish)
+
+## Develop
+
+```bash
+npm install
+npm run dev      # http://localhost:5173/portfolio/
+npm run build    # production build to dist/
+npm run preview  # preview the build
+```
+
+Deployed automatically to GitHub Pages on every push to main via GitHub Actions.
 
 ## Contact
-LinkedIn: https://www.linkedin.com/in/angelllm  |  GitHub: https://github.com/aangell98
 
-Portfolio site coming soon.
+LinkedIn: https://www.linkedin.com/in/angelllm  ·  GitHub: https://github.com/aangell98

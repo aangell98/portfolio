@@ -1,0 +1,156 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+html {
+  scroll-behavior: auto;
+}
+
+body {
+  margin: 0;
+  background: #05080f;
+  color: #e8eefc;
+  font-family: 'Sora', system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Lenis smooth scroll */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Selection */
+::selection {
+  background: rgba(70, 199, 224, 0.3);
+  color: #ffffff;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #05080f;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(#1f4e79, #46c7e0);
+  border-radius: 6px;
+}
+
+/* Utility: animated gradient text */
+.text-gradient {
+  background: linear-gradient(110deg, #7fe9ff, #46c7e0 40%, #8aa0ff 70%, #7fe9ff);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: shimmer 6s linear infinite;
+}
+
+/* Glass panel */
+.glass {
+  background: rgba(14, 23, 48, 0.55);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(127, 233, 255, 0.12);
+}
+
+.glass:hover {
+  border-color: rgba(127, 233, 255, 0.3);
+}
+
+/* Section grid background */
+.grid-bg {
+  background-image:
+    linear-gradient(rgba(70, 199, 224, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(70, 199, 224, 0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* Custom cursor */
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  border-radius: 9999px;
+  mix-blend-mode: screen;
+  will-change: transform;
+}
+.cursor-dot {
+  width: 7px;
+  height: 7px;
+  background: #7fe9ff;
+}
+.cursor-ring {
+  width: 38px;
+  height: 38px;
+  border: 1px solid rgba(127, 233, 255, 0.6);
+  transition: width 0.25s ease, height 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+}
+.cursor-ring.hover {
+  width: 64px;
+  height: 64px;
+  background: rgba(127, 233, 255, 0.08);
+  border-color: rgba(127, 233, 255, 0.9);
+}
+
+@media (max-width: 768px) {
+  .cursor-dot,
+  .cursor-ring {
+    display: none;
+  }
+}
+
+/* Hide default cursor on desktop for the custom one */
+@media (min-width: 769px) and (pointer: fine) {
+  * {
+    cursor: none;
+  }
+}
+
+/* Reveal helper */
+.will-reveal {
+  opacity: 0;
+}
+
+/* Marquee */
+.marquee {
+  animation: marquee 28s linear infinite;
+}
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
