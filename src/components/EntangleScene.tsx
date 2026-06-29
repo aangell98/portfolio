@@ -79,6 +79,41 @@ function makeNebulaTexture() {
   return tex
 }
 
+/* Comet streak: faint tapering tail on the left, bright round head on the right. */
+function makeCometTexture() {
+  const w = 256
+  const h = 64
+  const c = document.createElement('canvas')
+  c.width = w
+  c.height = h
+  const ctx = c.getContext('2d')!
+  const lin = ctx.createLinearGradient(0, 0, w, 0)
+  lin.addColorStop(0.0, 'rgba(255,255,255,0)')
+  lin.addColorStop(0.5, 'rgba(255,255,255,0.12)')
+  lin.addColorStop(0.82, 'rgba(255,255,255,0.55)')
+  lin.addColorStop(1.0, 'rgba(255,255,255,1)')
+  ctx.fillStyle = lin
+  ctx.fillRect(0, 0, w, h)
+  const head = ctx.createRadialGradient(w - h / 2, h / 2, 0, w - h / 2, h / 2, h / 2)
+  head.addColorStop(0, 'rgba(255,255,255,1)')
+  head.addColorStop(0.5, 'rgba(255,255,255,0.55)')
+  head.addColorStop(1, 'rgba(255,255,255,0)')
+  ctx.globalCompositeOperation = 'lighter'
+  ctx.fillStyle = head
+  ctx.fillRect(0, 0, w, h)
+  ctx.globalCompositeOperation = 'destination-in'
+  const vert = ctx.createLinearGradient(0, 0, 0, h)
+  vert.addColorStop(0.0, 'rgba(0,0,0,0)')
+  vert.addColorStop(0.5, 'rgba(0,0,0,1)')
+  vert.addColorStop(1.0, 'rgba(0,0,0,0)')
+  ctx.fillStyle = vert
+  ctx.fillRect(0, 0, w, h)
+  ctx.globalCompositeOperation = 'source-over'
+  const tex = new THREE.CanvasTexture(c)
+  tex.colorSpace = THREE.SRGBColorSpace
+  return tex
+}
+
 /* ----------------------------------------------------------------------------
  * Star shader: genesis expansion, Heisenberg jitter, twinkle, glow sprite,
  * scroll fade and an optional cursor gravity well (screen-space brightening).
@@ -132,9 +167,9 @@ const STAR_VERTEX = /* glsl */ `
     vec2 ndc = gl_Position.xy / max(gl_Position.w, 0.0001);
     vec2 d = ndc - uMouse;
     d.x *= uAspect;
-    float infl = uInteractive * smoothstep(0.26, 0.0, length(d)) * eased;
+    float infl = uInteractive * smoothstep(0.22, 0.0, length(d)) * eased;
     vHot = infl;
-    gl_PointSize *= (1.0 + infl * 1.3);
+    gl_PointSize *= (1.0 + infl * 0.7);
   }
 `
 
@@ -150,8 +185,8 @@ const STAR_FRAGMENT = /* glsl */ `
     float d = length(gl_PointCoord - 0.5);
     float core = smoothstep(0.32, 0.0, d);
     vec3 col = vColor * vGlow + vec3(1.0) * core * 0.45 * vGlow;
-    col += vColor * vHot * 1.1 + vec3(0.3) * vHot;
-    float a = tex.a * vGlow * (1.0 + vHot) * uFade;
+    col += vColor * vHot * 0.4 + vec3(0.08) * vHot;
+    float a = tex.a * vGlow * (1.0 + vHot * 0.4) * uFade;
     gl_FragColor = vec4(col, a);
   }
 `
@@ -534,6 +569,108 @@ function CoreGlow() {
   )
 }
 
+/* Occasional shooting stars sweeping across the field (high tier only). */
+function Comets({ progress, count = 2 }: { progress: React.MutableRefObject<number>; count?: number }) {
+  const map = useMemo(makeCometTexture, [])
+  type Comet = {
+    mesh: THREE.Mesh
+    mat: THREE.MeshBasicMaterial
+    from: THREE.Vector3
+    to: THREE.Vector3
+    t: number
+    dur: number
+    delay: number
+    live: boolean
+  }
+  const comets = useMemo(() => {
+    const arr: Comet[] = []
+    for (let i = 0; i < count; i++) {
+      const geo = new THREE.PlaneGeometry(1, 1)
+      const mat = new THREE.MeshBasicMaterial({
+        map,
+        transparent: true,
+        opacity: 0,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        color: (i % 2 ? PALETTE.glow : PALETTE.cyan).clone(),
+      })
+      const mesh = new THREE.Mesh(geo, mat)
+      mesh.frustumCulled = false
+      arr.push({
+        mesh,
+        mat,
+        from: new THREE.Vector3(),
+        to: new THREE.Vector3(),
+        t: 0,
+        dur: 1,
+        delay: 1.2 + Math.random() * 3.5,
+        live: false,
+      })
+    }
+    return arr
+  }, [count, map])
+
+  const spawn = (c: Comet) => {
+    const z = 0.8 + Math.random() * 1.6
+    const y0 = 3.0 + Math.random() * 1.4
+    const y1 = 2.4 + Math.random() * 1.2
+    const far = 8.5
+    const bias = 1.4
+    if (Math.random() < 0.5) {
+      c.from.set(far - bias, y0, z)
+      c.to.set(-far - bias, y1, z)
+    } else {
+      c.from.set(-far - bias, y0, z)
+      c.to.set(far - bias, y1, z)
+    }
+    const len = 2.8 + Math.random() * 1.8
+    const th = 0.05 + len * 0.018
+    const dir = c.to.clone().sub(c.from)
+    c.mesh.rotation.set(0, 0, Math.atan2(dir.y, dir.x))
+    c.mesh.scale.set(len, th, 1)
+    c.mat.color.copy(Math.random() < 0.5 ? PALETTE.glow : PALETTE.cyan)
+    c.t = 0
+    c.dur = 1.1 + Math.random() * 0.9
+    c.live = true
+  }
+
+  useFrame((_s, delta) => {
+    const ready = progress.current > 0.82
+    for (const c of comets) {
+      if (!ready || view.fade < 0.04) {
+        c.mat.opacity = 0
+        continue
+      }
+      if (!c.live) {
+        c.delay -= delta
+        if (c.delay <= 0) spawn(c)
+        else {
+          c.mat.opacity = 0
+          continue
+        }
+      }
+      c.t += delta
+      const k = c.t / c.dur
+      if (k >= 1) {
+        c.live = false
+        c.mat.opacity = 0
+        c.delay = 2.0 + Math.random() * 4.5
+        continue
+      }
+      c.mesh.position.copy(c.from).lerp(c.to, k)
+      c.mat.opacity = Math.sin(k * Math.PI) * 0.98 * view.fade
+    }
+  })
+
+  return (
+    <group>
+      {comets.map((c, i) => (
+        <primitive key={i} object={c.mesh} />
+      ))}
+    </group>
+  )
+}
+
 function Universe({ quality }: { quality: Quality }) {
   const group = useRef<THREE.Group>(null)
   const progress = useRef(0)
@@ -560,14 +697,17 @@ function Universe({ quality }: { quality: Quality }) {
   })
 
   return (
-    <group ref={group} position={[1.3, 0, 0]} rotation={[-0.95, 0, 0]}>
-      <CoreGlow />
-      <Nebula />
-      <Stars field={galaxy} size={1.05} progress={progress} />
-      <Bonds lines={network.lines} seeds={network.lineSeeds} ends={network.lineEnds} progress={progress} />
-      <Stars field={network.field} size={1.25} progress={progress} interactive={quality === 'high'} />
-      {quality === 'high' && <Flashes pts={network.pts} progress={progress} />}
-    </group>
+    <>
+      <group ref={group} position={[1.3, 0, 0]} rotation={[-0.95, 0, 0]}>
+        <CoreGlow />
+        <Nebula />
+        <Stars field={galaxy} size={1.05} progress={progress} />
+        <Bonds lines={network.lines} seeds={network.lineSeeds} ends={network.lineEnds} progress={progress} />
+        <Stars field={network.field} size={1.25} progress={progress} interactive={quality === 'high'} />
+        {quality === 'high' && <Flashes pts={network.pts} progress={progress} />}
+      </group>
+      {quality === 'high' && <Comets progress={progress} />}
+    </>
   )
 }
 
