@@ -328,6 +328,32 @@ function projectsEN(): ProjectItem[] {
       repos: [{ label: 'Code', href: 'https://github.com/aangell98/SocialMediaSentimentTracker' }],
       accent: '#5fe0c8',
     },
+    {
+      id: 'deliveryapp',
+      name: 'Delivery App',
+      blurb:
+        'A full-stack food delivery platform built with Spring Boot. Customers, restaurants and couriers, with role-based security and a clean layered architecture.',
+      longBlurb:
+        'A full-stack food delivery web application where users register as customers, restaurants or couriers. Customers browse restaurants, build a cart, place orders and manage addresses and favorites; restaurants manage menus and dishes; couriers pick up and track pending deliveries. Built with Spring Boot following a clean layered architecture (domain, persistence, presentation) with Spring Security, JPA persistence and a full test suite.',
+      features: [
+        'Three user roles (customer, restaurant, courier) with role-based access control',
+        'Spring Security with a custom authentication provider and encrypted credentials',
+        'Order lifecycle: cart, checkout, payment and delivery state tracking',
+        'Spring Data JPA persistence over a layered DAO design',
+        'Server-rendered UI with Thymeleaf templates',
+      ],
+      highlights: [
+        'Clean layered architecture: domain, persistence and presentation',
+        'JUnit 5 test suite with JaCoCo coverage and a SonarQube quality gate',
+        'Built and packaged with Maven (WAR on embedded Tomcat)',
+      ],
+      tags: ['Java', 'Spring Boot', 'Spring Security', 'JPA', 'Maven'],
+      metrics: ['Layered', 'Secured', 'Tested'],
+      icon: 'spring',
+      category: 'personal',
+      repos: [{ label: 'Code', href: 'https://github.com/aangell98/DeliveryAppUCML' }],
+      accent: '#6DB33F',
+    },
   ]
 }
 
@@ -506,6 +532,25 @@ function projectsES(): ProjectItem[] {
       tags: ['Python', 'NLP', 'Transformers', 'Streamlit'],
       metrics: ['NLP', 'Tiempo real'],
     },
+    deliveryapp: {
+      blurb:
+        'Una plataforma full-stack de reparto de comida construida con Spring Boot. Clientes, restaurantes y repartidores, con seguridad por roles y una arquitectura en capas limpia.',
+      longBlurb:
+        'Una aplicación web full-stack de reparto de comida donde los usuarios se registran como clientes, restaurantes o repartidores. Los clientes exploran restaurantes, montan un carrito, realizan pedidos y gestionan direcciones y favoritos; los restaurantes gestionan menús y platos; los repartidores recogen y siguen los pedidos pendientes. Construida con Spring Boot siguiendo una arquitectura en capas limpia (dominio, persistencia, presentación) con Spring Security, persistencia JPA y una batería de tests completa.',
+      features: [
+        'Tres roles de usuario (cliente, restaurante, repartidor) con control de acceso por rol',
+        'Spring Security con proveedor de autenticación propio y credenciales cifradas',
+        'Ciclo de vida del pedido: carrito, pago y seguimiento del estado de entrega',
+        'Persistencia con Spring Data JPA sobre un diseño DAO en capas',
+        'Interfaz renderizada en servidor con plantillas Thymeleaf',
+      ],
+      highlights: [
+        'Arquitectura en capas limpia: dominio, persistencia y presentación',
+        'Batería de tests JUnit 5 con cobertura JaCoCo y quality gate de SonarQube',
+        'Compilada y empaquetada con Maven (WAR sobre Tomcat embebido)',
+      ],
+      metrics: ['En capas', 'Segura', 'Con tests'],
+    },
   }
   return en.map((p) => ({ ...p, ...es[p.id], tags: es[p.id].tags ?? p.tags }))
 }
@@ -533,7 +578,7 @@ export const CONTENT: Record<Lang, Content> = {
         'Off the clock you will find me building 3D games, tinkering with AI side projects and learning whatever catches my eye. Curious, proactive and a fast learner who cares about clean engineering and real impact.',
       ],
       stats: [
-        { value: '9+', label: 'Projects shipped' },
+        { value: '10+', label: 'Projects shipped' },
         { value: '3', label: 'Microsoft certifications' },
         { value: '1,087', label: 'Tests in my thesis' },
         { value: 'C1', label: 'English level' },
@@ -626,7 +671,7 @@ export const CONTENT: Record<Lang, Content> = {
       heading: 'Tech I build with',
       sub: 'The tools I reach for, from cloud and backend to frontend and 3D.',
       concepts: 'And concepts I work with',
-      conceptItems: ['Cloud Architecture', 'AI Agents', 'RAG', 'Microservices', 'CI/CD', 'Cybersecurity', 'Data Analysis'],
+      conceptItems: ['Cloud Architecture', 'AI Agents', 'Multi-Agent Systems', 'RAG', 'LLMs', 'Microservices', 'REST APIs', 'Event Streaming', 'CI/CD', 'DevOps', 'Infrastructure as Code', 'Cybersecurity', 'Data Analysis', 'Real-time Systems', 'WebGL & 3D'],
     },
     certs: {
       kicker: 'Certifications',
@@ -672,7 +717,7 @@ export const CONTENT: Record<Lang, Content> = {
         'Fuera del trabajo me vas a encontrar creando juegos 3D, trasteando con proyectos de IA y aprendiendo lo que se me cruce. Curioso, proactivo y con ganas, me importa la ingeniería limpia y el impacto real.',
       ],
       stats: [
-        { value: '9+', label: 'Proyectos creados' },
+        { value: '10+', label: 'Proyectos creados' },
         { value: '3', label: 'Certificaciones Microsoft' },
         { value: '1.087', label: 'Tests en mi TFG' },
         { value: 'C1', label: 'Nivel de inglés' },
@@ -765,7 +810,7 @@ export const CONTENT: Record<Lang, Content> = {
       heading: 'Tecnologías con las que construyo',
       sub: 'Las herramientas a las que recurro, de cloud y backend a frontend y 3D.',
       concepts: 'Y conceptos con los que trabajo',
-      conceptItems: ['Arquitectura Cloud', 'Agentes de IA', 'RAG', 'Microservicios', 'CI/CD', 'Ciberseguridad', 'Análisis de Datos'],
+      conceptItems: ['Arquitectura Cloud', 'Agentes de IA', 'Sistemas Multiagente', 'RAG', 'LLMs', 'Microservicios', 'APIs REST', 'Streaming de Eventos', 'CI/CD', 'DevOps', 'Infraestructura como Código', 'Ciberseguridad', 'Análisis de Datos', 'Tiempo Real', 'WebGL y 3D'],
     },
     certs: {
       kicker: 'Certificaciones',
@@ -797,16 +842,22 @@ export const SKILL_LOGOS: { key: string; label: string }[] = [
   { key: 'python', label: 'Python' },
   { key: 'typescript', label: 'TypeScript' },
   { key: 'javascript', label: 'JavaScript' },
-  { key: 'react', label: 'React' },
   { key: 'java', label: 'Java' },
-  { key: 'postgresql', label: 'SQL' },
-  { key: 'docker', label: 'Docker' },
-  { key: 'githubactions', label: 'GitHub Actions' },
-  { key: 'linux', label: 'Linux' },
-  { key: 'threejs', label: 'Three.js' },
+  { key: 'nodejs', label: 'Node.js' },
+  { key: 'react', label: 'React' },
+  { key: 'spring', label: 'Spring' },
   { key: 'fastapi', label: 'FastAPI' },
-  { key: 'kafka', label: 'Kafka' },
+  { key: 'threejs', label: 'Three.js' },
+  { key: 'tailwindcss', label: 'Tailwind' },
+  { key: 'postgresql', label: 'SQL' },
   { key: 'mongodb', label: 'MongoDB' },
+  { key: 'kafka', label: 'Kafka' },
+  { key: 'docker', label: 'Docker' },
+  { key: 'kubernetes', label: 'Kubernetes' },
+  { key: 'githubactions', label: 'GitHub Actions' },
+  { key: 'git', label: 'Git' },
+  { key: 'linux', label: 'Linux' },
+  { key: 'openai', label: 'OpenAI' },
 ]
 
 export const LINKS = {
