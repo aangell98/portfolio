@@ -1,130 +1,435 @@
 import { useEffect, useMemo, useRef } from 'react'
-import { Canvas, useFrame } from '@react-three/fiber'
+import { Canvas, useFrame, useThree } from '@react-three/fiber'
+import { EffectComposer, Bloom } from '@react-three/postprocessing'
 import * as THREE from 'three'
 
-// Global, always-available pointer (works even when overlays sit above the canvas)
+/* ============================================================================
+ * Quantum Universe — a reimagining of the Entangle (TFG) cosmic web.
+ * A tilted spiral galaxy of glowing quantum nodes (cyan / purple / green / gold
+ * "bridge" stars) that ignites from a singularity on load, drifts through a
+ * nebula, and weaves an entanglement network. Mouse acts as a gentle gravity.
+ * ========================================================================== */
+
+// Always-available pointer (works even when DOM overlays sit above the canvas).
 const mouse = { x: 0, y: 0, tx: 0, ty: 0 }
 
-const pointVertex = /* glsl */ `
+const PALETTE = {
+  cyan: new THREE.Color('#3FD2E8'),
+  glow: new THREE.Color('#9bf1ff'),
+  purple: new THREE.Color('#9D6FDB'),
+  green: new THREE.Color('#3BF0B0'),
+  gold: new THREE.Color('#FFC864'),
+  blue: new THREE.Color('#4F86FF'),
+}
+
+const TAU = Math.PI * 2
+
+/* Gaussian-ish random for natural scatter. */
+function gauss() {
+  return (Math.random() + Math.random() + Math.random() - 1.5) / 1.5
+}
+
+/* Soft radial sprite for star halos (bright core, colored falloff). */
+function makeGlowTexture() {
+  const s = 128
+  const c = document.createElement('canvas')
+  c.width = c.height = s
+  const ctx = c.getContext('2d')!
+  const g = ctx.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s / 2)
+  g.addColorStop(0.0, 'rgba(255,255,255,1)')
+  g.addColorStop(0.18, 'rgba(255,255,255,0.85)')
+  g.addColorStop(0.4, 'rgba(255,255,255,0.32)')
+  g.addColorStop(0.75, 'rgba(255,255,255,0.06)')
+  g.addColorStop(1.0, 'rgba(255,255,255,0)')
+  ctx.fillStyle = g
+  ctx.fillRect(0, 0, s, s)
+  const tex = new THREE.CanvasTexture(c)
+  tex.colorSpace = THREE.SRGBColorSpace
+  return tex
+}
+
+/* Very soft, wide sprite for nebula clouds. */
+function makeNebulaTexture() {
+  const s = 256
+  const c = document.createElement('canvas')
+  c.width = c.height = s
+  const ctx = c.getContext('2d')!
+  const g = ctx.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s / 2)
+  g.addColorStop(0.0, 'rgba(255,255,255,0.55)')
+  g.addColorStop(0.35, 'rgba(255,255,255,0.18)')
+  g.addColorStop(0.7, 'rgba(255,255,255,0.04)')
+  g.addColorStop(1.0, 'rgba(255,255,255,0)')
+  ctx.fillStyle = g
+  ctx.fillRect(0, 0, s, s)
+  const tex = new THREE.CanvasTexture(c)
+  tex.colorSpace = THREE.SRGBColorSpace
+  return tex
+}
+
+/* ----------------------------------------------------------------------------
+ * Shared star shader: genesis expansion from a singularity, Heisenberg jitter,
+ * twinkle, and a glow-textured radiant sprite.
+ * -------------------------------------------------------------------------- */
+const STAR_VERTEX = /* glsl */ `
   attribute float aScale;
-  attribute float aPhase;
+  attribute float aSeed;
+  attribute vec3 aColor;
   uniform float uTime;
+  uniform float uProgress;
   uniform float uSize;
-  varying float vTwinkle;
-  void main() {
-    vTwinkle = 0.55 + 0.45 * sin(uTime * 1.6 + aPhase);
-    vec4 mv = modelViewMatrix * vec4(position, 1.0);
-    gl_PointSize = aScale * uSize * vTwinkle * (60.0 / -mv.z);
+  uniform float uDpr;
+  varying vec3 vColor;
+  varying float vGlow;
+
+  float easeOutCubic(float t){ t = clamp(t,0.0,1.0); return 1.0 - pow(1.0 - t, 3.0); }
+
+  void main(){
+    vColor = aColor;
+
+    // Staggered genesis: each star ignites and travels out from the core.
+    float stagger = fract(aSeed * 3.7) * 0.5;
+    float travel = clamp((uProgress - stagger) / 0.5, 0.0, 1.0);
+    float eased = easeOutCubic(travel);
+
+    // Swirl while travelling outward (galactic rotation feel).
+    float radial = length(position);
+    vec3 dir = radial > 0.001 ? normalize(position) : vec3(0.0,0.0,1.0);
+    vec3 tangent = normalize(cross(vec3(0.0,1.0,0.0), dir) + vec3(0.0001));
+    float swirl = sin(eased * 3.14159) * radial * 0.18;
+    vec3 pos = mix(vec3(0.0), position, eased) + tangent * swirl;
+
+    // Heisenberg jitter — quantum uncertainty once settled.
+    float j = step(0.99, travel);
+    pos += j * vec3(
+      sin(uTime * 1.7 + aSeed * 17.3),
+      sin(uTime * 1.3 + aSeed * 31.7),
+      sin(uTime * 1.1 + aSeed * 47.1)
+    ) * 0.03;
+
+    float twinkle = 0.6 + 0.4 * sin(uTime * 1.8 + aSeed * 6.28);
+    vGlow = twinkle * eased;
+
+    vec4 mv = modelViewMatrix * vec4(pos, 1.0);
+    float size = aScale * uSize * (0.55 + 0.45 * twinkle) * eased;
+    gl_PointSize = clamp(size * (300.0 / -mv.z), 0.0, 90.0) * uDpr;
     gl_Position = projectionMatrix * mv;
   }
 `
 
-const pointFragment = /* glsl */ `
+const STAR_FRAGMENT = /* glsl */ `
   precision highp float;
-  uniform vec3 uColorA;
-  uniform vec3 uColorB;
-  varying float vTwinkle;
-  void main() {
-    vec2 uv = gl_PointCoord - 0.5;
-    float d = length(uv);
-    if (d > 0.5) discard;
-    float core = smoothstep(0.5, 0.05, d);
-    vec3 col = mix(uColorA, uColorB, vTwinkle);
-    gl_FragColor = vec4(col, core * (0.45 + 0.45 * vTwinkle));
+  uniform sampler2D uMap;
+  varying vec3 vColor;
+  varying float vGlow;
+  void main(){
+    vec4 tex = texture2D(uMap, gl_PointCoord);
+    float d = length(gl_PointCoord - 0.5);
+    float core = smoothstep(0.32, 0.0, d);
+    vec3 col = vColor * vGlow + vec3(1.0) * core * 0.45 * vGlow;
+    gl_FragColor = vec4(col, tex.a * vGlow);
   }
 `
 
-function buildGraph(count: number, radius: number) {
+type StarField = {
+  positions: Float32Array
+  colors: Float32Array
+  scales: Float32Array
+  seeds: Float32Array
+}
+
+/* Spiral galaxy: dense warm core, cool sweeping arms, faint spherical halo. */
+function buildGalaxy(count: number, maxR: number): StarField {
+  const positions = new Float32Array(count * 3)
+  const colors = new Float32Array(count * 3)
+  const scales = new Float32Array(count)
+  const seeds = new Float32Array(count)
+  const ARMS = 3
+  const SPIN = 2.3
+  const c = new THREE.Color()
+
+  for (let i = 0; i < count; i++) {
+    const haloStar = Math.random() < 0.18
+    let x: number, y: number, z: number, rNorm: number
+
+    if (haloStar) {
+      // Spherical halo for depth.
+      const r = maxR * (0.5 + Math.random() * 0.7)
+      const theta = Math.random() * TAU
+      const phi = Math.acos(2 * Math.random() - 1)
+      x = r * Math.sin(phi) * Math.cos(theta)
+      y = r * Math.cos(phi) * 0.6
+      z = r * Math.sin(phi) * Math.sin(theta)
+      rNorm = Math.min(r / maxR, 1)
+    } else {
+      // Spiral arm.
+      const r = Math.pow(Math.random(), 0.62) * maxR
+      rNorm = r / maxR
+      const arm = (i % ARMS) / ARMS * TAU
+      const scatter = 0.12 + rNorm * 0.42
+      const angle = arm + r * SPIN + gauss() * scatter
+      x = Math.cos(angle) * r + gauss() * scatter * 0.6
+      z = Math.sin(angle) * r + gauss() * scatter * 0.6
+      y = gauss() * (0.55 - rNorm * 0.35) // thinner disk outward
+    }
+
+    positions[i * 3] = x
+    positions[i * 3 + 1] = y
+    positions[i * 3 + 2] = z
+
+    // Colour: warm core (gold/purple) -> cool arms (cyan/green); rare bridge gold.
+    const t = Math.random()
+    if (Math.random() < 0.04) c.copy(PALETTE.gold)
+    else if (rNorm < 0.32) c.copy(PALETTE.purple).lerp(PALETTE.gold, t * 0.5)
+    else if (t < 0.6) c.copy(PALETTE.cyan).lerp(PALETTE.glow, Math.random() * 0.5)
+    else if (t < 0.85) c.copy(PALETTE.purple)
+    else c.copy(PALETTE.green)
+    colors[i * 3] = c.r
+    colors[i * 3 + 1] = c.g
+    colors[i * 3 + 2] = c.b
+
+    scales[i] = (0.35 + Math.random() * 0.7) * (1.0 - rNorm * 0.35)
+    seeds[i] = Math.random()
+  }
+  return { positions, colors, scales, seeds }
+}
+
+/* Foreground entanglement network: bright bonded nodes + filaments. */
+function buildNetwork(count: number, radius: number) {
   const pts: THREE.Vector3[] = []
   const positions = new Float32Array(count * 3)
+  const colors = new Float32Array(count * 3)
   const scales = new Float32Array(count)
-  const phases = new Float32Array(count)
+  const seeds = new Float32Array(count)
+  const c = new THREE.Color()
   for (let i = 0; i < count; i++) {
-    // gently flattened sphere shell
-    const v = new THREE.Vector3(
-      (Math.random() - 0.5) * 2,
-      (Math.random() - 0.5) * 2,
-      (Math.random() - 0.5) * 2,
-    )
-    v.normalize().multiplyScalar(radius * (0.45 + Math.random() * 0.55))
-    v.z *= 0.65
+    const v = new THREE.Vector3(gauss(), gauss() * 0.5, gauss())
+    if (v.length() < 0.001) v.set(0, 0, 1)
+    v.normalize().multiplyScalar(radius * (0.35 + Math.random() * 0.7))
     pts.push(v)
     positions[i * 3] = v.x
     positions[i * 3 + 1] = v.y
     positions[i * 3 + 2] = v.z
-    scales[i] = 0.6 + Math.random() * 1.4
-    phases[i] = Math.random() * Math.PI * 2
+    const isBridge = Math.random() < 0.12
+    if (isBridge) c.copy(PALETTE.gold)
+    else {
+      const r = Math.random()
+      c.copy(r < 0.62 ? PALETTE.cyan : r < 0.85 ? PALETTE.purple : PALETTE.green)
+    }
+    colors[i * 3] = c.r
+    colors[i * 3 + 1] = c.g
+    colors[i * 3 + 2] = c.b
+    scales[i] = isBridge ? 2.6 + Math.random() * 1.2 : 1.1 + Math.random() * 1.1
+    seeds[i] = Math.random()
   }
-  // connect near neighbors (static topology in local space)
+  // Bonds between near neighbours (the collaboration web).
   const linePos: number[] = []
-  const maxDist = radius * 0.4
+  const lineSeed: number[] = []
+  const maxDist = radius * 0.42
   for (let i = 0; i < count; i++) {
     let links = 0
     for (let j = i + 1; j < count && links < 3; j++) {
       if (pts[i].distanceTo(pts[j]) < maxDist) {
         linePos.push(pts[i].x, pts[i].y, pts[i].z, pts[j].x, pts[j].y, pts[j].z)
+        const s = Math.random()
+        lineSeed.push(s, s)
         links++
       }
     }
   }
-  return { positions, scales, phases, lines: new Float32Array(linePos), pts }
+  return {
+    field: { positions, colors, scales, seeds } as StarField,
+    lines: new Float32Array(linePos),
+    lineSeeds: new Float32Array(lineSeed),
+  }
 }
 
-function Constellation() {
-  const group = useRef<THREE.Group>(null)
-  const pointsMat = useRef<THREE.ShaderMaterial>(null)
-  const { positions, scales, phases, lines } = useMemo(() => buildGraph(180, 4.4), [])
-
+function Stars({ field, size, progress }: { field: StarField; size: number; progress: React.MutableRefObject<number> }) {
+  const mat = useRef<THREE.ShaderMaterial>(null)
+  const map = useMemo(makeGlowTexture, [])
+  const { gl } = useThree()
   const uniforms = useMemo(
     () => ({
       uTime: { value: 0 },
-      uSize: { value: 4.5 },
-      uColorA: { value: new THREE.Color('#46C7E0') },
-      uColorB: { value: new THREE.Color('#a78bfa') },
+      uProgress: { value: 0 },
+      uSize: { value: size },
+      uDpr: { value: Math.min(gl.getPixelRatio(), 2) },
+      uMap: { value: map },
     }),
+    [map, size, gl],
+  )
+  useFrame((s) => {
+    if (mat.current) {
+      mat.current.uniforms.uTime.value = s.clock.elapsedTime
+      mat.current.uniforms.uProgress.value = progress.current
+    }
+  })
+  return (
+    <points>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" args={[field.positions, 3]} />
+        <bufferAttribute attach="attributes-aColor" args={[field.colors, 3]} />
+        <bufferAttribute attach="attributes-aScale" args={[field.scales, 1]} />
+        <bufferAttribute attach="attributes-aSeed" args={[field.seeds, 1]} />
+      </bufferGeometry>
+      <shaderMaterial
+        ref={mat}
+        uniforms={uniforms}
+        vertexShader={STAR_VERTEX}
+        fragmentShader={STAR_FRAGMENT}
+        transparent
+        depthWrite={false}
+        blending={THREE.AdditiveBlending}
+      />
+    </points>
+  )
+}
+
+const BOND_VERTEX = /* glsl */ `
+  attribute float aSeed;
+  uniform float uProgress;
+  varying float vSeed;
+  void main(){
+    vSeed = aSeed;
+    vec4 mv = modelViewMatrix * vec4(position * clamp(uProgress, 0.0, 1.0), 1.0);
+    gl_Position = projectionMatrix * mv;
+  }
+`
+const BOND_FRAGMENT = /* glsl */ `
+  precision highp float;
+  uniform float uTime;
+  uniform float uProgress;
+  uniform vec3 uColor;
+  varying float vSeed;
+  void main(){
+    float flow = 0.45 + 0.55 * sin(uTime * 1.4 + vSeed * 18.0);
+    gl_FragColor = vec4(uColor, 0.16 * flow * clamp(uProgress, 0.0, 1.0));
+  }
+`
+
+function Bonds({ lines, seeds, progress }: { lines: Float32Array; seeds: Float32Array; progress: React.MutableRefObject<number> }) {
+  const mat = useRef<THREE.ShaderMaterial>(null)
+  const uniforms = useMemo(
+    () => ({ uTime: { value: 0 }, uProgress: { value: 0 }, uColor: { value: PALETTE.cyan.clone() } }),
     [],
   )
+  useFrame((s) => {
+    if (mat.current) {
+      mat.current.uniforms.uTime.value = s.clock.elapsedTime
+      mat.current.uniforms.uProgress.value = progress.current
+    }
+  })
+  return (
+    <lineSegments>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" args={[lines, 3]} />
+        <bufferAttribute attach="attributes-aSeed" args={[seeds, 1]} />
+      </bufferGeometry>
+      <shaderMaterial
+        ref={mat}
+        uniforms={uniforms}
+        vertexShader={BOND_VERTEX}
+        fragmentShader={BOND_FRAGMENT}
+        transparent
+        depthWrite={false}
+        blending={THREE.AdditiveBlending}
+      />
+    </lineSegments>
+  )
+}
 
-  useFrame((state, delta) => {
-    const t = state.clock.elapsedTime
-    if (pointsMat.current) pointsMat.current.uniforms.uTime.value = t
-    // ease global mouse
-    mouse.tx += (mouse.x - mouse.tx) * 0.06
-    mouse.ty += (mouse.y - mouse.ty) * 0.06
+function Nebula() {
+  const map = useMemo(makeNebulaTexture, [])
+  const clouds = useMemo(() => {
+    const arr: { pos: [number, number, number]; scale: number; color: THREE.Color; phase: number }[] = []
+    const cols = [PALETTE.cyan, PALETTE.purple, PALETTE.green, PALETTE.blue, PALETTE.purple, PALETTE.cyan]
+    for (let i = 0; i < cols.length; i++) {
+      arr.push({
+        pos: [gauss() * 6, gauss() * 3.2, -3 - Math.random() * 5],
+        scale: 7 + Math.random() * 7,
+        color: cols[i],
+        phase: Math.random() * TAU,
+      })
+    }
+    return arr
+  }, [])
+  const refs = useRef<(THREE.Sprite | null)[]>([])
+  useFrame((s) => {
+    const t = s.clock.elapsedTime
+    clouds.forEach((c, i) => {
+      const sp = refs.current[i]
+      if (sp) {
+        sp.position.x = c.pos[0] + Math.sin(t * 0.08 + c.phase) * 0.7
+        sp.position.y = c.pos[1] + Math.cos(t * 0.06 + c.phase) * 0.5
+      }
+    })
+  })
+  return (
+    <group>
+      {clouds.map((c, i) => (
+        <sprite key={i} ref={(el) => (refs.current[i] = el)} position={c.pos} scale={[c.scale, c.scale, 1]}>
+          <spriteMaterial
+            map={map}
+            color={c.color}
+            transparent
+            opacity={0.17}
+            depthWrite={false}
+            blending={THREE.AdditiveBlending}
+          />
+        </sprite>
+      ))}
+    </group>
+  )
+}
+
+function CoreGlow() {
+  const map = useMemo(makeGlowTexture, [])
+  const ref = useRef<THREE.Sprite>(null)
+  useFrame((s) => {
+    if (ref.current) {
+      const p = 1.0 + Math.sin(s.clock.elapsedTime * 1.2) * 0.06
+      ref.current.scale.set(3.4 * p, 3.4 * p, 1)
+    }
+  })
+  return (
+    <sprite ref={ref} position={[0, 0, 0]} scale={[3.4, 3.4, 1]}>
+      <spriteMaterial map={map} color={PALETTE.glow} transparent opacity={0.55} depthWrite={false} blending={THREE.AdditiveBlending} />
+    </sprite>
+  )
+}
+
+function Universe() {
+  const group = useRef<THREE.Group>(null)
+  const progress = useRef(0)
+  const galaxy = useMemo(() => buildGalaxy(4200, 6.2), [])
+  const network = useMemo(() => buildNetwork(190, 5.0), [])
+
+  // Respect reduced-motion: skip the genesis and idle rotation.
+  const reduced = useMemo(
+    () => typeof window !== 'undefined' && !!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches,
+    [],
+  )
+  if (reduced && progress.current === 0) progress.current = 1
+
+  useFrame((_state, delta) => {
+    if (progress.current < 1) progress.current = Math.min(1, progress.current + delta / 2.6)
+    mouse.tx += (mouse.x - mouse.tx) * 0.05
+    mouse.ty += (mouse.y - mouse.ty) * 0.05
     if (group.current) {
-      group.current.rotation.y += delta * 0.05
-      // parallax toward cursor (always responsive, tracked on window)
-      group.current.rotation.x = THREE.MathUtils.lerp(group.current.rotation.x, mouse.ty * 0.5, 0.08)
-      group.current.rotation.y += (mouse.tx * 0.0009)
-      group.current.position.x = THREE.MathUtils.lerp(group.current.position.x, mouse.tx * 0.6, 0.06)
-      group.current.position.y = THREE.MathUtils.lerp(group.current.position.y, -mouse.ty * 0.4, 0.06)
+      group.current.rotation.y += delta * (reduced ? 0.0 : 0.045)
+      group.current.rotation.x = THREE.MathUtils.lerp(group.current.rotation.x, -0.95 + mouse.ty * 0.28, 0.06)
+      group.current.rotation.z = THREE.MathUtils.lerp(group.current.rotation.z, mouse.tx * 0.06, 0.06)
+      group.current.position.x = THREE.MathUtils.lerp(group.current.position.x, 1.4 + mouse.tx * 0.7, 0.05)
+      group.current.position.y = THREE.MathUtils.lerp(group.current.position.y, -mouse.ty * 0.45, 0.05)
     }
   })
 
   return (
-    <group ref={group}>
-      <lineSegments>
-        <bufferGeometry>
-          <bufferAttribute attach="attributes-position" args={[lines, 3]} />
-        </bufferGeometry>
-        <lineBasicMaterial color="#3f9ec4" transparent opacity={0.4} blending={THREE.AdditiveBlending} depthWrite={false} />
-      </lineSegments>
-      <points>
-        <bufferGeometry>
-          <bufferAttribute attach="attributes-position" args={[positions, 3]} />
-          <bufferAttribute attach="attributes-aScale" args={[scales, 1]} />
-          <bufferAttribute attach="attributes-aPhase" args={[phases, 1]} />
-        </bufferGeometry>
-        <shaderMaterial
-          ref={pointsMat}
-          uniforms={uniforms}
-          vertexShader={pointVertex}
-          fragmentShader={pointFragment}
-          transparent
-          depthWrite={false}
-          blending={THREE.AdditiveBlending}
-        />
-      </points>
+    <group ref={group} rotation={[-0.95, 0, 0]}>
+      <CoreGlow />
+      <Nebula />
+      <Stars field={galaxy} size={1.05} progress={progress} />
+      <Bonds lines={network.lines} seeds={network.lineSeeds} progress={progress} />
+      <Stars field={network.field} size={1.25} progress={progress} />
     </group>
   )
 }
@@ -142,11 +447,15 @@ export default function EntangleScene() {
   return (
     <Canvas
       className="!absolute inset-0"
-      dpr={[1, 1.8]}
-      camera={{ position: [0, 0, 9], fov: 55 }}
-      gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+      dpr={[1, 2]}
+      camera={{ position: [0, 0.6, 11], fov: 52 }}
+      gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
+      onCreated={({ gl }) => gl.setClearColor('#05080f', 1)}
     >
-      <Constellation />
+      <Universe />
+      <EffectComposer>
+        <Bloom intensity={0.95} luminanceThreshold={0.0} luminanceSmoothing={0.9} mipmapBlur radius={0.72} />
+      </EffectComposer>
     </Canvas>
   )
 }

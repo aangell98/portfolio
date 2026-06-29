@@ -26,13 +26,9 @@ export default function Hero() {
         </Suspense>
       </div>
 
-      {/* glows */}
-      <div className="pointer-events-none absolute inset-0 z-0">
-        <div className="absolute left-1/4 top-1/3 h-[40rem] w-[40rem] -translate-x-1/2 rounded-full bg-brand/20 blur-[120px]" />
-        <div className="absolute right-1/4 bottom-1/4 h-[30rem] w-[30rem] translate-x-1/2 rounded-full bg-cyan/10 blur-[120px]" />
-      </div>
-      <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-r from-ink via-ink/50 to-transparent lg:via-ink/30" />
-      <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-b from-ink/30 via-transparent to-ink" />
+      {/* legibility gradients over the universe */}
+      <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-r from-ink via-ink/65 to-transparent lg:via-ink/40" />
+      <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-b from-ink/40 via-transparent to-ink" />
 
       {/* content */}
       <div className="relative z-20 mx-auto flex min-h-[100svh] max-w-6xl flex-col justify-center px-6">
