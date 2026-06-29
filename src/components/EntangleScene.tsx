@@ -504,21 +504,21 @@ function Flashes({ pts, progress, count = 3 }: { pts: THREE.Vector3[]; progress:
   )
 }
 
-function Nebula() {
+function Nebula({ count = 6 }: { count?: number }) {
   const map = useMemo(makeNebulaTexture, [])
   const clouds = useMemo(() => {
     const arr: { pos: [number, number, number]; scale: number; color: THREE.Color; phase: number }[] = []
     const cols = [PALETTE.cyan, PALETTE.purple, PALETTE.green, PALETTE.blue, PALETTE.purple, PALETTE.cyan]
-    for (let i = 0; i < cols.length; i++) {
+    for (let i = 0; i < count; i++) {
       arr.push({
         pos: [gauss() * 6, gauss() * 3.2, -3 - Math.random() * 5],
         scale: 7 + Math.random() * 7,
-        color: cols[i],
+        color: cols[i % cols.length],
         phase: Math.random() * TAU,
       })
     }
     return arr
-  }, [])
+  }, [count])
   const refs = useRef<(THREE.Sprite | null)[]>([])
   useFrame((s) => {
     const t = s.clock.elapsedTime
@@ -690,7 +690,7 @@ function Universe({ quality }: { quality: Quality }) {
     <>
       <group ref={group} position={[1.3, 0, 0]} rotation={[-0.95, 0, 0]}>
         <CoreGlow />
-        <Nebula />
+        <Nebula count={quality === 'low' ? 2 : 6} />
         <Stars field={galaxy} size={1.05} progress={progress} />
         <Bonds lines={network.lines} seeds={network.lineSeeds} ends={network.lineEnds} progress={progress} />
         <Stars field={network.field} size={1.25} progress={progress} interactive={quality === 'high'} />
@@ -738,7 +738,7 @@ export default function EntangleScene() {
       <Canvas
         className="!absolute inset-0"
         frameloop={active ? 'always' : 'never'}
-        dpr={quality === 'low' ? [1, 1.5] : [1, 2]}
+        dpr={quality === 'low' ? 1 : [1, 2]}
         camera={{ position: [0, 0.6, 11], fov: 52 }}
         gl={{ antialias: quality === 'high', alpha: false, powerPreference: 'high-performance' }}
         onCreated={({ gl }) => gl.setClearColor('#05080f', 1)}

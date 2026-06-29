@@ -41,6 +41,48 @@ function HeroPoster() {
   )
 }
 
+/**
+ * Mobile / low-power background: the poster paints instantly (no blocking), then
+ * once the page is interactive we mount an optimized live galaxy that fades in
+ * over it. Reduced-motion users keep the gentle static poster.
+ */
+function MobileScene() {
+  const reduce = useReducedMotion()
+  const [live, setLive] = useState(false)
+
+  useEffect(() => {
+    if (reduce) return
+    const w = window as unknown as {
+      requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number
+      cancelIdleCallback?: (id: number) => void
+    }
+    if (w.requestIdleCallback) {
+      const id = w.requestIdleCallback(() => setLive(true), { timeout: 1500 })
+      return () => w.cancelIdleCallback?.(id)
+    }
+    const id = window.setTimeout(() => setLive(true), 700)
+    return () => clearTimeout(id)
+  }, [reduce])
+
+  return (
+    <>
+      <HeroPoster />
+      {live && (
+        <Suspense fallback={null}>
+          <motion.div
+            className="absolute inset-0"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1.4, ease: 'easeOut' }}
+          >
+            <EntangleScene />
+          </motion.div>
+        </Suspense>
+      )}
+    </>
+  )
+}
+
 export default function Hero() {
   const { t, lang } = useI18n()
   const [role, setRole] = useState(0)
@@ -55,14 +97,14 @@ export default function Hero() {
 
   return (
     <section id="home" className="relative min-h-[100svh] w-full overflow-hidden">
-      {/* 3D background on capable devices; static poster on low-power / mobile */}
+      {/* Full WebGL galaxy on desktop; poster + deferred optimized galaxy on mobile */}
       <div className="absolute inset-0 z-0">
         {quality === 'high' ? (
           <Suspense fallback={<HeroPoster />}>
             <EntangleScene />
           </Suspense>
         ) : (
-          <HeroPoster />
+          <MobileScene />
         )}
       </div>
 
