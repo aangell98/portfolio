@@ -27,9 +27,19 @@ function Shell() {
   return (
     <div className="relative min-h-screen bg-ink">
       {/* fixed ambient background */}
-      <div className="pointer-events-none fixed inset-0 z-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(31,78,121,0.25),transparent_40%),radial-gradient(circle_at_80%_100%,rgba(70,199,224,0.12),transparent_45%)]" />
+      <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+        <motion.div
+          className="absolute -left-40 top-[-15%] h-[42rem] w-[42rem] rounded-full bg-brand/20 blur-[150px]"
+          animate={{ x: [0, 70, 0], y: [0, 50, 0] }}
+          transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
+        />
+        <motion.div
+          className="absolute right-[-15%] bottom-[-15%] h-[38rem] w-[38rem] rounded-full bg-cyan/12 blur-[150px]"
+          animate={{ x: [0, -60, 0], y: [0, -40, 0] }}
+          transition={{ duration: 26, repeat: Infinity, ease: 'easeInOut' }}
+        />
       </div>
+      <div className="grain pointer-events-none fixed inset-0 z-[1]" />
 
       <Cursor />
       <ScrollProgress />

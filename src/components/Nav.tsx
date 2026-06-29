@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useI18n } from '../i18n'
+import Logo from './Logo'
 
 export default function Nav() {
   const { t, lang, toggle } = useI18n()
@@ -33,13 +34,8 @@ export default function Nav() {
         }`}
       >
         <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-          <a href="#home" className="group flex items-center gap-2" aria-label="Home">
-            <span className="grid h-9 w-9 place-items-center rounded-lg bg-gradient-to-br from-cyan to-brand font-bold text-ink">
-              A
-            </span>
-            <span className="font-mono text-sm tracking-wide text-white/80 group-hover:text-cyan">
-              lara<span className="text-cyan">.</span>dev
-            </span>
+          <a href="#home" className="group flex items-center gap-2 transition-opacity hover:opacity-80" aria-label="Home">
+            <Logo />
           </a>
 
           <div className="hidden items-center gap-7 md:flex">
@@ -90,7 +86,7 @@ export default function Nav() {
             className="fixed inset-0 z-[60] bg-ink/95 backdrop-blur-xl md:hidden"
           >
             <div className="flex items-center justify-between px-6 py-4">
-              <span className="font-mono text-sm text-cyan">lara.dev</span>
+              <Logo />
               <button
                 onClick={() => setOpen(false)}
                 className="grid h-9 w-9 place-items-center rounded-lg border border-white/10 text-xl text-white"

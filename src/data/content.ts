@@ -165,9 +165,9 @@ export const CONTENT: Record<Lang, Content> = {
       badge: 'Open to opportunities',
       titleA: 'Ángel Luis',
       titleB: 'Lara Martín',
-      roles: ['Computer Engineer', 'Cloud & AI Specialist', 'AI Agents & RAG', 'Azure Architect'],
+      roles: ['Computer Engineer', 'Software Engineer', 'Cloud & AI', 'Full Stack Developer'],
       intro:
-        'I build cloud architectures, AI agents and RAG systems that turn complex problems into measurable value. Currently a Cloud & AI Specialist Intern at Microsoft.',
+        'I design and build software end to end, from cloud architectures and AI systems to full stack products. Always learning, always shipping. Currently a Cloud & AI Specialist Intern at Microsoft.',
       ctaWork: 'View my work',
       ctaCv: 'Download CV',
       ctaContact: 'Get in touch',
@@ -175,9 +175,9 @@ export const CONTENT: Record<Lang, Content> = {
     },
     about: {
       kicker: 'About',
-      heading: 'Engineering value with Cloud and AI',
+      heading: 'Engineering software that delivers value',
       body: [
-        'I am a Computer Engineer specialized in Cloud and AI. I design scalable architectures on Azure and AWS, build multi-agent and RAG systems, and ship full stack products end to end.',
+        'I am a Computer Engineer who enjoys the whole stack: cloud and AI, backend, frontend and everything in between. I design scalable systems, build AI agents and RAG, and ship products end to end.',
         'Proactive, curious and a fast learner. I care about clean engineering, measurable impact and experiences that feel effortless.',
       ],
       stats: [
@@ -277,7 +277,7 @@ export const CONTENT: Record<Lang, Content> = {
     contact: {
       kicker: 'Contact',
       heading: 'Let us build something',
-      body: 'Open to opportunities in Cloud and AI. Reach out and let us talk.',
+      body: 'Open to new opportunities and interesting challenges. Reach out and let us talk.',
       email: 'Email me',
       cv: 'Download CV',
       cvEn: 'CV (English)',
@@ -292,9 +292,9 @@ export const CONTENT: Record<Lang, Content> = {
       badge: 'Abierto a oportunidades',
       titleA: 'Ángel Luis',
       titleB: 'Lara Martín',
-      roles: ['Ingeniero Informático', 'Especialista Cloud & IA', 'Agentes de IA & RAG', 'Arquitecto Azure'],
+      roles: ['Ingeniero Informático', 'Desarrollador de Software', 'Cloud e IA', 'Full Stack'],
       intro:
-        'Construyo arquitecturas cloud, agentes de IA y sistemas RAG que convierten problemas complejos en valor medible. Actualmente Cloud & AI Specialist Intern en Microsoft.',
+        'Diseño y construyo software de principio a fin, desde arquitecturas cloud y sistemas de IA hasta productos full stack. Siempre aprendiendo, siempre entregando. Actualmente Cloud & AI Specialist Intern en Microsoft.',
       ctaWork: 'Ver proyectos',
       ctaCv: 'Descargar CV',
       ctaContact: 'Hablemos',
@@ -302,9 +302,9 @@ export const CONTENT: Record<Lang, Content> = {
     },
     about: {
       kicker: 'Sobre mi',
-      heading: 'Generando valor con Cloud e IA',
+      heading: 'Ingeniería de software que aporta valor',
       body: [
-        'Soy Ingeniero Informático especializado en Cloud e IA. Diseño arquitecturas escalables en Azure y AWS, construyo sistemas multiagente y RAG, y desarrollo productos full stack de principio a fin.',
+        'Soy Ingeniero Informático y disfruto de todo el stack: cloud e IA, backend, frontend y todo lo que hay en medio. Diseño sistemas escalables, construyo agentes de IA y RAG, y desarrollo productos de principio a fin.',
         'Proactivo, curioso y con gran capacidad de aprendizaje. Me importa la ingeniería limpia, el impacto medible y las experiencias que se sienten naturales.',
       ],
       stats: [
@@ -404,7 +404,7 @@ export const CONTENT: Record<Lang, Content> = {
     contact: {
       kicker: 'Contacto',
       heading: 'Construyamos algo',
-      body: 'Abierto a oportunidades en Cloud e IA. Escríbeme y hablamos.',
+      body: 'Abierto a nuevas oportunidades y retos interesantes. Escríbeme y hablamos.',
       email: 'Enviar email',
       cv: 'Descargar CV',
       cvEn: 'CV (Ingles)',
