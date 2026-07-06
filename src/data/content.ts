@@ -574,8 +574,8 @@ export const CONTENT: Record<Lang, Content> = {
       kicker: 'About',
       heading: 'Computer Engineer who loves to build',
       body: [
-        'I am a Computer Engineer who enjoys the whole stack: cloud and AI, backend, frontend and everything in between. I design scalable systems, build AI agents and RAG, and ship products end to end.',
-        'Off the clock you will find me building 3D games, tinkering with AI side projects and learning whatever catches my eye. Curious, proactive and a fast learner who cares about clean engineering and real impact.',
+        'I am a Computer Engineer specialized in cloud and AI, and I move comfortably across the whole stack: backend, frontend and whatever it takes. I design scalable systems, build AI agents and RAG, and ship products end to end.',
+        'Off the clock you will find me building 3D games, prototyping ideas and learning nonstop. Curious, proactive and a fast learner who cares about clean engineering and real impact.',
       ],
       stats: [
         { value: '10+', label: 'Projects shipped' },
@@ -713,8 +713,8 @@ export const CONTENT: Record<Lang, Content> = {
       kicker: 'Sobre mí',
       heading: 'Ingeniero Informático al que le encanta crear',
       body: [
-        'Soy Ingeniero Informático y disfruto de todo el stack: cloud e IA, backend, frontend y todo lo que hay en medio. Diseño sistemas escalables, construyo agentes de IA y RAG, y desarrollo productos de principio a fin.',
-        'Fuera del trabajo me vas a encontrar creando juegos 3D, trasteando con proyectos de IA y aprendiendo lo que se me cruce. Curioso, proactivo y con ganas, me importa la ingeniería limpia y el impacto real.',
+        'Soy Ingeniero Informático especializado en cloud e IA, y me muevo con soltura por todo el stack: backend, frontend y lo que haga falta. Diseño sistemas escalables, construyo agentes de IA y RAG, y llevo productos de principio a fin.',
+        'Fuera del trabajo me vas a encontrar creando juegos 3D, montando prototipos y aprendiendo sin parar. Curioso, proactivo y con ganas, me importan la ingeniería limpia y el impacto real.',
       ],
       stats: [
         { value: '10+', label: 'Proyectos creados' },
