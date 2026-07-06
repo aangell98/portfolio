@@ -13,7 +13,7 @@ import { detectQuality, type Quality } from '../lib/quality'
  * ========================================================================== */
 
 // Always-available pointer + scroll (work even under DOM overlays).
-const mouse = { x: 0, y: 0, tx: 0, ty: 0, wx: 0, wy: 0 }
+const mouse = { x: 0, y: 0, tx: 0, ty: 0 }
 const view = { fade: 1 }
 
 const PALETTE = {
@@ -157,9 +157,9 @@ const STAR_VERTEX = /* glsl */ `
     vec2 ndc = gl_Position.xy / max(gl_Position.w, 0.0001);
     vec2 d = ndc - uMouse;
     d.x *= uAspect;
-    float infl = uInteractive * smoothstep(0.2, 0.0, length(d)) * eased;
+    float infl = uInteractive * smoothstep(0.22, 0.0, length(d)) * eased;
     vHot = infl;
-    gl_PointSize *= (1.0 + infl * 0.85);
+    gl_PointSize *= (1.0 + infl * 0.7);
   }
 `
 
@@ -327,11 +327,7 @@ function Stars({
     u.uProgress.value = progress.current
     u.uFade.value = view.fade
     if (interactive) {
-      // Gravity well tracks the RAW pointer (lightly smoothed) so the glow sits
-      // right under the cursor, not trailing behind the slow camera parallax.
-      mouse.wx += (mouse.x - mouse.wx) * 0.5
-      mouse.wy += (mouse.y - mouse.wy) * 0.5
-      u.uMouse.value.set(mouse.wx, -mouse.wy)
+      u.uMouse.value.set(mouse.tx, -mouse.ty)
       u.uAspect.value = viewport.width / viewport.height
     }
   })
