@@ -580,7 +580,7 @@ export const CONTENT: Record<Lang, Content> = {
       stats: [
         { value: '10+', label: 'Projects shipped' },
         { value: '3', label: 'Microsoft certifications' },
-        { value: '1,087', label: 'Tests in my thesis' },
+        { value: '20+', label: 'Technologies' },
         { value: 'C1', label: 'English level' },
       ],
     },
@@ -719,7 +719,7 @@ export const CONTENT: Record<Lang, Content> = {
       stats: [
         { value: '10+', label: 'Proyectos creados' },
         { value: '3', label: 'Certificaciones Microsoft' },
-        { value: '1.087', label: 'Tests en mi TFG' },
+        { value: '20+', label: 'Tecnologías' },
         { value: 'C1', label: 'Nivel de inglés' },
       ],
     },
