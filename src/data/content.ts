@@ -96,7 +96,7 @@ function projectsEN(): ProjectItem[] {
       id: 'entangle',
       name: 'Entangle',
       blurb:
-        'My Bachelor\'s Thesis. A config-driven AI agent (6 workers) with RAG that maps, analyzes and visualizes the open-source quantum computing ecosystem on GitHub. Split into two repositories: the Core engine and the Visualizer.',
+        'My Bachelor\'s Thesis. A platform that maps, analyzes and visualizes the open-source quantum computing ecosystem on GitHub. Split into two repositories: the Core engine (config-driven ingestion with 6 workers and network analysis) and the Visualizer (2D collaboration graph, 3D quantum universe and a RAG-powered AI assistant).',
       longBlurb:
         'Entangle is a research-grade analytics platform that maps and analyzes the global open-source quantum computing ecosystem on GitHub. The Core backend crawls repositories, organizations and developers matching a taxonomy of 70+ quantum keywords, enriches them with collaboration metadata, computes network metrics and serves everything through a 56-endpoint FastAPI. The Visualizer turns that data into an interactive dashboard with a 2D collaboration graph, an immersive 3D quantum universe and an AI chat assistant.',
       features: [
@@ -111,7 +111,7 @@ function projectsEN(): ProjectItem[] {
         '56 REST endpoints with SSE streaming and a permanent metric cache',
         'One-command azd deploy: Container Apps, Cosmos DB vCore, AI Foundry, managed identity',
       ],
-      tags: ['Python', 'RAG', 'Azure OpenAI', 'Cosmos DB', 'React', 'Three.js'],
+      tags: ['Python', 'GitHub API', 'RAG', 'Azure OpenAI', 'Cosmos DB', 'React', 'Three.js'],
       metrics: ['96.7% routing accuracy', '1,087 tests', '0.96 modularity', '2 repositories'],
       logo: 'projects/entangle.png',
       category: 'flagship',
@@ -362,7 +362,7 @@ function projectsES(): ProjectItem[] {
   const es: Record<string, { blurb: string; longBlurb?: string; features?: string[]; highlights?: string[]; tags?: string[]; metrics?: string[] }> = {
     entangle: {
       blurb:
-        'Mi Trabajo Fin de Grado. Un agente de IA config-driven (6 workers) con RAG que mapea, analiza y visualiza el ecosistema open source de computación cuántica en GitHub. Dividido en dos repositorios: el motor Core y el Visualizer.',
+        'Mi Trabajo Fin de Grado. Una plataforma que mapea, analiza y visualiza el ecosistema open source de la computación cuántica en GitHub. Se divide en dos repositorios: el motor Core (ingesta config-driven con 6 workers y análisis de redes) y el Visualizer (grafo de colaboración 2D, universo cuántico 3D y un asistente de IA con RAG).',
       longBlurb:
         'Entangle es una plataforma de analítica que mapea y analiza el ecosistema open source de computación cuántica en GitHub. El backend Core rastrea repositorios, organizaciones y desarrolladores que encajan con una taxonomía de más de 70 palabras clave cuánticas, los enriquece con metadatos de colaboración, calcula métricas de red y lo sirve todo a través de una FastAPI de 56 endpoints. El Visualizer convierte esos datos en un dashboard interactivo con un grafo de colaboración 2D, un universo cuántico 3D inmersivo y un asistente de IA.',
       features: [
@@ -378,7 +378,7 @@ function projectsES(): ProjectItem[] {
         'Despliegue azd en un comando: Container Apps, Cosmos DB vCore, AI Foundry, identidad gestionada',
       ],
       metrics: ['96,7% de acierto', '1.087 tests', '0,96 modularidad', '2 repositorios'],
-      tags: ['Python', 'RAG', 'Azure OpenAI', 'Cosmos DB', 'React', 'Three.js'],
+      tags: ['Python', 'GitHub API', 'RAG', 'Azure OpenAI', 'Cosmos DB', 'React', 'Three.js'],
     },
     insurance: {
       blurb: 'Procesamiento multiagente de siniestros de seguros. Gobernado, seguro y auditable, sobre Azure OpenAI.',
