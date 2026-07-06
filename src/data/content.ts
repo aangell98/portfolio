@@ -560,8 +560,8 @@ export const CONTENT: Record<Lang, Content> = {
     nav: { home: 'Home', about: 'About', work: 'Work', experience: 'Experience', skills: 'Skills', contact: 'Contact' },
     hero: {
       badge: 'Open to opportunities',
-      titleA: 'Angel Luis',
-      titleB: 'Lara Martin',
+      titleA: 'Ángel Luis',
+      titleB: 'Lara Martín',
       roles: ['Computer Engineer', 'Full Stack Developer', 'Cloud & AI', 'Game Dev & 3D'],
       intro:
         'I design and build software end to end, from cloud and AI systems to full stack products and the odd 3D game. Always learning, always shipping. Currently a Cloud & AI Specialist Intern at Microsoft.',
@@ -692,15 +692,15 @@ export const CONTENT: Record<Lang, Content> = {
       cvEn: 'CV (English)',
       cvEs: 'CV (Spanish)',
       backTop: 'Back to top',
-      built: 'Designed and built by Angel Luis Lara Martin with React, Three.js and Framer Motion.',
+      built: 'Designed and built by Ángel Luis Lara Martín with React, Three.js and Framer Motion.',
     },
   },
   es: {
     nav: { home: 'Inicio', about: 'Sobre mí', work: 'Proyectos', experience: 'Experiencia', skills: 'Skills', contact: 'Contacto' },
     hero: {
       badge: 'Abierto a oportunidades',
-      titleA: 'Angel Luis',
-      titleB: 'Lara Martin',
+      titleA: 'Ángel Luis',
+      titleB: 'Lara Martín',
       roles: ['Ingeniero Informático', 'Desarrollador Full Stack', 'Cloud e IA', 'Game Dev & 3D'],
       intro:
         'Diseño y construyo software de principio a fin, desde sistemas cloud e IA hasta productos full stack y algún juego 3D. Siempre aprendiendo, siempre entregando. Actualmente Cloud & AI Specialist Intern en Microsoft.',
@@ -831,7 +831,7 @@ export const CONTENT: Record<Lang, Content> = {
       cvEn: 'CV (Inglés)',
       cvEs: 'CV (Español)',
       backTop: 'Volver arriba',
-      built: 'Diseñado y construido por Angel Luis Lara Martin con React, Three.js y Framer Motion.',
+      built: 'Diseñado y construido por Ángel Luis Lara Martín con React, Three.js y Framer Motion.',
     },
   },
 }
@@ -843,11 +843,13 @@ export const SKILL_LOGOS: { key: string; label: string }[] = [
   { key: 'typescript', label: 'TypeScript' },
   { key: 'javascript', label: 'JavaScript' },
   { key: 'java', label: 'Java' },
+  { key: 'cpp', label: 'C++' },
   { key: 'nodejs', label: 'Node.js' },
   { key: 'react', label: 'React' },
   { key: 'spring', label: 'Spring' },
   { key: 'fastapi', label: 'FastAPI' },
   { key: 'threejs', label: 'Three.js' },
+  { key: 'unreal', label: 'Unreal' },
   { key: 'tailwindcss', label: 'Tailwind' },
   { key: 'postgresql', label: 'SQL' },
   { key: 'mongodb', label: 'MongoDB' },
