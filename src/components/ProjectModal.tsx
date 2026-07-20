@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useI18n } from '../i18n'
 import type { ProjectItem } from '../data/content'
 import { TechIcon, asset } from './ui/Icons'
+import AwardBadge from './ui/AwardBadge'
 
 function GithubMark() {
   return (
@@ -67,7 +68,10 @@ export default function ProjectModal({ project, onClose }: { project: ProjectIte
                   <TechIcon name={project.icon} size={30} />
                 ) : null}
                 <div>
-                  <h3 className="text-2xl font-bold text-white">{project.name}</h3>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h3 className="text-2xl font-bold text-white">{project.name}</h3>
+                    {project.award && <AwardBadge label={project.award} />}
+                  </div>
                   {project.metrics && (
                     <div className="mt-2 flex flex-wrap gap-1.5">
                       {project.metrics.map((m) => (

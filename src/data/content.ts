@@ -15,6 +15,7 @@ export interface ProjectItem {
   highlights?: string[]
   tags: string[]
   metrics?: string[]
+  award?: string
   icon?: string
   logo?: string
   shot?: string
@@ -113,6 +114,7 @@ function projectsEN(): ProjectItem[] {
       ],
       tags: ['Python', 'GitHub API', 'RAG', 'Azure OpenAI', 'Cosmos DB', 'React', 'Three.js'],
       metrics: ['96.7% routing accuracy', '1,087 tests', '0.96 modularity', '2 repositories'],
+      award: 'Distinction 9/10',
       logo: 'projects/entangle.png',
       category: 'flagship',
       repos: ENTANGLE_REPOS,
@@ -359,7 +361,7 @@ function projectsEN(): ProjectItem[] {
 
 function projectsES(): ProjectItem[] {
   const en = projectsEN()
-  const es: Record<string, { blurb: string; longBlurb?: string; features?: string[]; highlights?: string[]; tags?: string[]; metrics?: string[] }> = {
+  const es: Record<string, { blurb: string; longBlurb?: string; features?: string[]; highlights?: string[]; tags?: string[]; metrics?: string[]; award?: string }> = {
     entangle: {
       blurb:
         'Mi Trabajo Fin de Grado. Una plataforma que mapea, analiza y visualiza el ecosistema open source de la computación cuántica en GitHub. Se divide en dos repositorios: el motor Core (ingesta config-driven con 6 workers y análisis de redes) y el Visualizer (grafo de colaboración 2D, universo cuántico 3D y un asistente de IA con RAG).',
@@ -378,6 +380,7 @@ function projectsES(): ProjectItem[] {
         'Despliegue azd en un comando: Container Apps, Cosmos DB vCore, AI Foundry, identidad gestionada',
       ],
       metrics: ['96,7% de acierto', '1.087 tests', '0,96 modularidad', '2 repositorios'],
+      award: 'Sobresaliente 9/10',
       tags: ['Python', 'GitHub API', 'RAG', 'Azure OpenAI', 'Cosmos DB', 'React', 'Three.js'],
     },
     insurance: {
@@ -580,7 +583,7 @@ export const CONTENT: Record<Lang, Content> = {
       stats: [
         { value: '10+', label: 'Projects shipped' },
         { value: '3', label: 'Microsoft certifications' },
-        { value: '20+', label: 'Technologies' },
+        { value: '9/10', label: 'Thesis · Distinction' },
         { value: 'C1', label: 'English level' },
       ],
     },
@@ -719,7 +722,7 @@ export const CONTENT: Record<Lang, Content> = {
       stats: [
         { value: '10+', label: 'Proyectos creados' },
         { value: '3', label: 'Certificaciones Microsoft' },
-        { value: '20+', label: 'Tecnologías' },
+        { value: '9/10', label: 'TFG · Sobresaliente' },
         { value: 'C1', label: 'Nivel de inglés' },
       ],
     },

@@ -4,6 +4,7 @@ import { useI18n } from '../i18n'
 import { LINKS, type Category, type ProjectItem } from '../data/content'
 import Reveal, { Kicker } from './ui/Reveal'
 import { TechIcon, asset } from './ui/Icons'
+import AwardBadge from './ui/AwardBadge'
 import ProjectModal from './ProjectModal'
 
 function ProjectMark({ p }: { p: ProjectItem }) {
@@ -108,7 +109,10 @@ function FeaturedCard({ p, onOpen }: { p: ProjectItem; onOpen: (p: ProjectItem) 
             />
           </div>
           <div>
-            <CatBadge category={p.category} />
+            <div className="flex flex-wrap items-center gap-2">
+              <CatBadge category={p.category} />
+              {p.award && <AwardBadge label={p.award} />}
+            </div>
             <h3 className="mt-3 text-2xl font-bold text-white sm:text-3xl">{p.name}</h3>
             <p className="mt-3 max-w-2xl text-sm leading-relaxed text-mist/75 sm:text-base">{p.blurb}</p>
             {p.metrics && (
@@ -174,7 +178,10 @@ const Card = forwardRef<HTMLDivElement, { p: ProjectItem; i: number; onOpen: (p:
 
         <div className="relative flex items-start justify-between gap-3">
           <ProjectMark p={p} />
-          <CatBadge category={p.category} />
+          <div className="flex flex-col items-end gap-1.5">
+            <CatBadge category={p.category} />
+            {p.award && <AwardBadge label={p.award} />}
+          </div>
         </div>
 
         <h3 className="relative mt-4 font-mono text-base font-bold text-white">{p.name}</h3>
