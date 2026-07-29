@@ -5,6 +5,7 @@ import { LINKS, type Category, type ProjectItem } from '../data/content'
 import Reveal, { Kicker } from './ui/Reveal'
 import { TechIcon, asset } from './ui/Icons'
 import ProjectModal from './ProjectModal'
+import SmartDemoLink from './ui/SmartDemoLink'
 
 function ProjectMark({ p }: { p: ProjectItem }) {
   if (p.logo) {
@@ -40,11 +41,12 @@ function RepoLinks({ p }: { p: ProjectItem }) {
   return (
     <div className="flex flex-wrap items-center gap-2">
       {p.live && (
-        <a
-          href={p.live}
-          target="_blank"
-          rel="noreferrer"
+        <SmartDemoLink
+          live={p.live}
+          offline={p.offline}
+          probe={p.liveProbe}
           onClick={(e) => e.stopPropagation()}
+          title={p.offline ? t.work.liveFallbackHint : undefined}
           className="inline-flex items-center gap-1.5 rounded-lg bg-cyan/15 px-3 py-1.5 text-xs font-semibold text-cyan transition-colors hover:bg-cyan/25"
         >
           <span className="relative flex h-1.5 w-1.5">
@@ -52,7 +54,18 @@ function RepoLinks({ p }: { p: ProjectItem }) {
             <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-cyan" />
           </span>
           {t.work.liveLabel}
-        </a>
+        </SmartDemoLink>
+      )}
+      {p.offline && (
+        <SmartDemoLink
+          offline={p.offline}
+          preferOffline
+          onClick={(e) => e.stopPropagation()}
+          className="inline-flex items-center gap-1.5 rounded-lg border border-violet-400/30 bg-violet-400/10 px-3 py-1.5 text-xs font-semibold text-violet-300 transition-colors hover:border-violet-300/60 hover:bg-violet-400/20"
+        >
+          <span className="h-1.5 w-1.5 rounded-full bg-violet-300" />
+          {t.work.offlineLabel}
+        </SmartDemoLink>
       )}
       {p.repos.map((r) => (
         <a

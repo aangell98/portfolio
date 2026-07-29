@@ -21,6 +21,8 @@ export interface ProjectItem {
   category: Category
   repos: RepoLink[]
   live?: string
+  liveProbe?: string
+  offline?: string
   accent: string
 }
 
@@ -64,6 +66,12 @@ export interface Content {
     liveDemo: string
     livePreview: string
     openLive: string
+    offlineLabel: string
+    offlineDemo: string
+    offlinePreview: string
+    openOffline: string
+    resilientPreview: string
+    liveFallbackHint: string
     viewCode: string
     featuresLabel: string
     highlightsLabel: string
@@ -117,6 +125,8 @@ function projectsEN(): ProjectItem[] {
       category: 'flagship',
       repos: ENTANGLE_REPOS,
       live: 'https://blue-rock-0771cc403.1.azurestaticapps.net',
+      liveProbe: 'https://blue-rock-0771cc403.1.azurestaticapps.net/logo.png',
+      offline: 'https://angel-tfg-uclm.github.io/Entangle-Visualizer/',
       shot: 'projects/shots/entangle.png',
       accent: '#8b5cf6',
     },
@@ -144,6 +154,8 @@ function projectsEN(): ProjectItem[] {
       category: 'work',
       repos: [{ label: 'Code', href: 'https://github.com/aangell98/insurance-ai-agents' }],
       live: 'https://ambitious-river-0f1566b03.7.azurestaticapps.net',
+      liveProbe: 'https://ambitious-river-0f1566b03.7.azurestaticapps.net/brand-logo.png',
+      offline: 'https://aangell98.github.io/insurance-ai-agents/',
       shot: 'projects/shots/insurance.png',
       accent: '#7fa6ff',
     },
@@ -171,6 +183,8 @@ function projectsEN(): ProjectItem[] {
       category: 'work',
       repos: [{ label: 'Code', href: 'https://github.com/aangell98/sales-cockpit-ai-agents' }],
       live: 'https://agreeable-flower-09b095e03.7.azurestaticapps.net',
+      liveProbe: 'https://agreeable-flower-09b095e03.7.azurestaticapps.net/brand-logo.svg',
+      offline: 'https://aangell98.github.io/sales-cockpit-ai-agents/',
       shot: 'projects/shots/sales-cockpit.png',
       accent: '#46C7E0',
     },
@@ -197,6 +211,7 @@ function projectsEN(): ProjectItem[] {
       icon: 'typescript',
       category: 'work',
       repos: [{ label: 'Code', href: 'https://github.com/aangell98/policyforge' }],
+      offline: 'https://aangell98.github.io/policyforge/',
       accent: '#9b8cff',
     },
     {
@@ -223,6 +238,8 @@ function projectsEN(): ProjectItem[] {
       category: 'work',
       repos: [{ label: 'Code', href: 'https://github.com/aangell98/cart-recovery-ai-agents' }],
       live: 'https://purple-forest-08b16d503.7.azurestaticapps.net',
+      liveProbe: 'https://purple-forest-08b16d503.7.azurestaticapps.net/brand-logo.svg',
+      offline: 'https://aangell98.github.io/cart-recovery-ai-agents/',
       shot: 'projects/shots/cart-recovery.png',
       accent: '#5fe0c8',
     },
@@ -249,6 +266,7 @@ function projectsEN(): ProjectItem[] {
       icon: 'threejs',
       category: 'work',
       repos: [{ label: 'Code', href: 'https://github.com/aangell98/sceneforge' }],
+      offline: 'https://aangell98.github.io/sceneforge/',
       accent: '#46C7E0',
     },
     {
@@ -301,6 +319,7 @@ function projectsEN(): ProjectItem[] {
       icon: 'kafka',
       category: 'personal',
       repos: [{ label: 'Code', href: 'https://github.com/aangell98/Kafka-Bitcoin-Tracker' }],
+      offline: 'https://aangell98.github.io/Kafka-Bitcoin-Tracker/',
       accent: '#f7931a',
     },
     {
@@ -659,6 +678,12 @@ export const CONTENT: Record<Lang, Content> = {
       liveDemo: 'Live demo',
       livePreview: 'Live preview',
       openLive: 'Open live demo',
+      offlineLabel: 'Offline',
+      offlineDemo: 'Preserved demo',
+      offlinePreview: 'Offline preview',
+      openOffline: 'Open preserved demo',
+      resilientPreview: 'Live with offline fallback',
+      liveFallbackHint: 'Uses the preserved demo automatically if the live deployment is unavailable',
       viewCode: 'View code',
       featuresLabel: 'Key features',
       highlightsLabel: 'Highlights',
@@ -798,6 +823,12 @@ export const CONTENT: Record<Lang, Content> = {
       liveDemo: 'Demo en vivo',
       livePreview: 'Vista en vivo',
       openLive: 'Abrir demo en vivo',
+      offlineLabel: 'Offline',
+      offlineDemo: 'Demo preservada',
+      offlinePreview: 'Vista offline',
+      openOffline: 'Abrir demo preservada',
+      resilientPreview: 'Live con fallback offline',
+      liveFallbackHint: 'Abre automáticamente la demo preservada si el despliegue live no está disponible',
       viewCode: 'Ver código',
       featuresLabel: 'Características',
       highlightsLabel: 'Aspectos destacados',

@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useI18n } from '../i18n'
 import type { ProjectItem } from '../data/content'
 import { TechIcon, asset } from './ui/Icons'
+import SmartDemoLink from './ui/SmartDemoLink'
 
 function GithubMark() {
   return (
@@ -84,23 +85,27 @@ export default function ProjectModal({ project, onClose }: { project: ProjectIte
             {/* body */}
             <div className="space-y-7 p-6 sm:p-8">
               {project.shot && (
-                <a
-                  href={project.live ?? project.repos[0]?.href}
-                  target="_blank"
-                  rel="noreferrer"
+                <SmartDemoLink
+                  live={project.live ?? (!project.offline ? project.repos[0]?.href : undefined)}
+                  offline={project.offline}
+                  probe={project.liveProbe}
                   className="group relative block overflow-hidden rounded-xl border border-white/10 bg-ink/40 shadow-[0_18px_50px_-20px_rgba(0,0,0,0.8)]"
                 >
                   <div className="flex items-center gap-1.5 border-b border-white/8 bg-ink/60 px-3.5 py-2.5">
                     <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
                     <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
                     <span className="h-2.5 w-2.5 rounded-full bg-white/15" />
-                    {project.live && (
+                    {(project.live || project.offline) && (
                       <span className="ml-2 inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider text-emerald-300/80">
                         <span className="relative flex h-1.5 w-1.5">
                           <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/70" />
                           <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
                         </span>
-                        {t.work.livePreview}
+                        {project.live && project.offline
+                          ? t.work.resilientPreview
+                          : project.live
+                            ? t.work.livePreview
+                            : t.work.offlinePreview}
                       </span>
                     )}
                   </div>
@@ -115,15 +120,15 @@ export default function ProjectModal({ project, onClose }: { project: ProjectIte
                         ;(e.currentTarget.closest('a') as HTMLElement | null)?.style.setProperty('display', 'none')
                       }}
                     />
-                    {project.live && (
+                    {(project.live || project.offline) && (
                       <div className="pointer-events-none absolute inset-0 flex items-end justify-end bg-gradient-to-t from-ink/70 via-transparent to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                         <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-xs font-semibold text-white backdrop-blur-sm">
-                          {t.work.openLive} &#8599;
+                          {project.live ? t.work.openLive : t.work.openOffline} &#8599;
                         </span>
                       </div>
                     )}
                   </div>
-                </a>
+                </SmartDemoLink>
               )}
 
               <p className="text-[15px] leading-relaxed text-mist/85">{project.longBlurb ?? project.blurb}</p>
@@ -171,10 +176,11 @@ export default function ProjectModal({ project, onClose }: { project: ProjectIte
             {/* footer actions */}
             <div className="sticky bottom-0 flex flex-wrap gap-3 border-t border-white/8 bg-panel/95 p-5 sm:p-6">
               {project.live && (
-                <a
-                  href={project.live}
-                  target="_blank"
-                  rel="noreferrer"
+                <SmartDemoLink
+                  live={project.live}
+                  offline={project.offline}
+                  probe={project.liveProbe}
+                  title={project.offline ? t.work.liveFallbackHint : undefined}
                   className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-cyan to-brand px-6 py-3 text-sm font-semibold text-ink transition-shadow hover:shadow-[0_0_24px_rgba(70,199,224,0.45)]"
                 >
                   <span className="relative flex h-2 w-2">
@@ -182,7 +188,17 @@ export default function ProjectModal({ project, onClose }: { project: ProjectIte
                     <span className="relative inline-flex h-2 w-2 rounded-full bg-ink/80" />
                   </span>
                   {t.work.liveDemo}
-                </a>
+                </SmartDemoLink>
+              )}
+              {project.offline && (
+                <SmartDemoLink
+                  offline={project.offline}
+                  preferOffline
+                  className="inline-flex items-center gap-2 rounded-full border border-violet-400/35 bg-violet-400/10 px-5 py-3 text-sm font-semibold text-violet-200 transition-colors hover:border-violet-300/70 hover:bg-violet-400/20"
+                >
+                  <span className="h-2 w-2 rounded-full bg-violet-300" />
+                  {t.work.offlineDemo}
+                </SmartDemoLink>
               )}
               {project.repos.map((r) => (
                 <a
