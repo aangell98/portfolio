@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useI18n } from '../i18n'
 import type { ProjectItem } from '../data/content'
-import { TechIcon, asset } from './ui/Icons'
+import { DocumentIcon, TechIcon, asset } from './ui/Icons'
 import SmartDemoLink from './ui/SmartDemoLink'
 
 function GithubMark() {
@@ -199,6 +199,17 @@ export default function ProjectModal({ project, onClose }: { project: ProjectIte
                   <span className="h-2 w-2 rounded-full bg-violet-300" />
                   {t.work.offlineDemo}
                 </SmartDemoLink>
+              )}
+              {project.thesis && (
+                <a
+                  href={project.thesis}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full border border-amber-300/35 bg-amber-300/10 px-5 py-3 text-sm font-semibold text-amber-100 transition-colors hover:border-amber-200/70 hover:bg-amber-300/20"
+                >
+                  <DocumentIcon />
+                  {t.work.thesisLabel}
+                </a>
               )}
               {project.repos.map((r) => (
                 <a

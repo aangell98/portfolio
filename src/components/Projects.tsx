@@ -3,7 +3,7 @@ import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from
 import { useI18n } from '../i18n'
 import { LINKS, type Category, type ProjectItem } from '../data/content'
 import Reveal, { Kicker } from './ui/Reveal'
-import { TechIcon, asset } from './ui/Icons'
+import { DocumentIcon, TechIcon, asset } from './ui/Icons'
 import ProjectModal from './ProjectModal'
 import SmartDemoLink from './ui/SmartDemoLink'
 
@@ -66,6 +66,18 @@ function RepoLinks({ p }: { p: ProjectItem }) {
           <span className="h-1.5 w-1.5 rounded-full bg-violet-300" />
           {t.work.offlineLabel}
         </SmartDemoLink>
+      )}
+      {p.thesis && (
+        <a
+          href={p.thesis}
+          target="_blank"
+          rel="noreferrer"
+          onClick={(e) => e.stopPropagation()}
+          className="inline-flex items-center gap-1.5 rounded-lg border border-amber-300/30 bg-amber-300/10 px-3 py-1.5 text-xs font-semibold text-amber-200 transition-colors hover:border-amber-200/60 hover:bg-amber-300/20"
+        >
+          <DocumentIcon size={13} />
+          {t.work.thesisLabel}
+        </a>
       )}
       {p.repos.map((r) => (
         <a

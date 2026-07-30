@@ -23,6 +23,7 @@ export interface ProjectItem {
   live?: string
   liveProbe?: string
   offline?: string
+  thesis?: string
   accent: string
 }
 
@@ -72,6 +73,7 @@ export interface Content {
     openOffline: string
     resilientPreview: string
     liveFallbackHint: string
+    thesisLabel: string
     viewCode: string
     featuresLabel: string
     highlightsLabel: string
@@ -127,6 +129,7 @@ function projectsEN(): ProjectItem[] {
       live: 'https://blue-rock-0771cc403.1.azurestaticapps.net',
       liveProbe: 'https://blue-rock-0771cc403.1.azurestaticapps.net/logo.png',
       offline: 'https://angel-tfg-uclm.github.io/Entangle-Visualizer/',
+      thesis: 'https://angel-tfg-uclm.github.io/Entangle-Visualizer/media/entangle-tfg-memoria.pdf',
       shot: 'projects/shots/entangle.png',
       accent: '#8b5cf6',
     },
@@ -684,6 +687,7 @@ export const CONTENT: Record<Lang, Content> = {
       openOffline: 'Open preserved demo',
       resilientPreview: 'Live with offline fallback',
       liveFallbackHint: 'Uses the preserved demo automatically if the live deployment is unavailable',
+      thesisLabel: 'Thesis PDF',
       viewCode: 'View code',
       featuresLabel: 'Key features',
       highlightsLabel: 'Highlights',
@@ -829,6 +833,7 @@ export const CONTENT: Record<Lang, Content> = {
       openOffline: 'Abrir demo preservada',
       resilientPreview: 'Live con fallback offline',
       liveFallbackHint: 'Abre automáticamente la demo preservada si el despliegue live no está disponible',
+      thesisLabel: 'Memoria TFG',
       viewCode: 'Ver código',
       featuresLabel: 'Características',
       highlightsLabel: 'Aspectos destacados',

@@ -15,6 +15,20 @@ export function TechIcon({ name, size = 22 }: { name: string; size?: number }) {
   )
 }
 
+export function DocumentIcon({ size = 14 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M7 3h7l4 4v14H7V3Z"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinejoin="round"
+      />
+      <path d="M14 3v5h5M10 13h5M10 17h5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  )
+}
+
 const MONO: Record<string, { text: string; bg: string; fg: string }> = {
   uclm: { text: 'UCLM', bg: '#7a1f2b', fg: '#ff9aa6' },
   ies: { text: 'IES', bg: '#0e2a22', fg: '#5fe0c8' },
