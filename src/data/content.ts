@@ -81,6 +81,7 @@ export interface Content {
     email: string
     cvEn: string
     cvEs: string
+    recommendation: string
     backTop: string
     built: string
   }
@@ -602,6 +603,7 @@ export const CONTENT: Record<Lang, Content> = {
             'Design and optimize scalable Azure cloud architectures for enterprise customers.',
             'Drive AI, application modernization and cloud adoption initiatives.',
             'Author technical documentation and partner with cross-functional teams.',
+            'Deliver technical demos and proofs of concept, building trusted advisor relationships with customers.',
           ],
         },
         {
@@ -695,6 +697,7 @@ export const CONTENT: Record<Lang, Content> = {
       email: 'Email me',
       cvEn: 'CV (English)',
       cvEs: 'CV (Spanish)',
+      recommendation: 'Recommendation letter',
       backTop: 'Back to top',
       built: 'Designed and built by Ángel Luis Lara Martín with React, Three.js and Framer Motion.',
     },
@@ -742,6 +745,7 @@ export const CONTENT: Record<Lang, Content> = {
             'Diseño y optimizo arquitecturas cloud escalables en Azure para clientes empresariales.',
             'Impulso iniciativas de IA, modernización de aplicaciones y adopción cloud.',
             'Documento soluciones y colaboro con equipos multidisciplinares.',
+            'Realizo demos técnicas y pruebas de concepto, generando relaciones de confianza con los clientes.',
           ],
         },
         {
@@ -835,6 +839,7 @@ export const CONTENT: Record<Lang, Content> = {
       email: 'Enviar email',
       cvEn: 'CV (Inglés)',
       cvEs: 'CV (Español)',
+      recommendation: 'Carta de recomendación',
       backTop: 'Volver arriba',
       built: 'Diseñado y construido por Ángel Luis Lara Martín con React, Three.js y Framer Motion.',
     },
@@ -875,4 +880,5 @@ export const LINKS = {
   learnEs: 'https://learn.microsoft.com/es-es/users/angelluislaramartin-9888/credentials?tab=credentials-tab',
   cvEn: 'https://github.com/aangell98/aangell98/raw/main/cv/CV_EN.pdf',
   cvEs: 'https://github.com/aangell98/aangell98/raw/main/cv/CV_ES.pdf',
+  recommendationLetter: 'https://github.com/aangell98/aangell98/raw/main/letters/Recommendation_Letter.pdf',
 }
