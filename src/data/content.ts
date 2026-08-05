@@ -567,7 +567,7 @@ export const CONTENT: Record<Lang, Content> = {
       titleB: 'Lara Martín',
       roles: ['Computer Engineer', 'Full Stack Developer', 'Cloud & AI', 'Game Dev & 3D'],
       intro:
-        'I design and build software end to end, from cloud and AI systems to full stack products and the odd 3D game. Always learning, always shipping. Currently a Cloud & AI Solution Engineer Intern at Microsoft.',
+        'I design and build software end to end, from cloud and AI systems to full stack products and the odd 3D game. Always learning, always shipping. Currently a Cloud & AI Solution Engineer at Microsoft.',
       ctaWork: 'View my work',
       ctaCv: 'Download CV',
       ctaContact: 'Get in touch',
@@ -592,7 +592,7 @@ export const CONTENT: Record<Lang, Content> = {
       heading: 'Where I have worked',
       items: [
         {
-          role: 'Cloud & AI Solution Engineer Intern',
+          role: 'Cloud & AI Solution Engineer',
           org: 'Microsoft',
           date: 'Jan 2026 - Present',
           tag: 'Cloud & AI',
@@ -707,7 +707,7 @@ export const CONTENT: Record<Lang, Content> = {
       titleB: 'Lara Martín',
       roles: ['Ingeniero Informático', 'Desarrollador Full Stack', 'Cloud e IA', 'Game Dev & 3D'],
       intro:
-        'Diseño y construyo software de principio a fin, desde sistemas cloud e IA hasta productos full stack y algún juego 3D. Siempre aprendiendo, siempre entregando. Actualmente Cloud & AI Solution Engineer Intern en Microsoft.',
+        'Diseño y construyo software de principio a fin, desde sistemas cloud e IA hasta productos full stack y algún juego 3D. Siempre aprendiendo, siempre entregando. Actualmente Cloud & AI Solution Engineer en Microsoft.',
       ctaWork: 'Ver proyectos',
       ctaCv: 'Descargar CV',
       ctaContact: 'Hablemos',
@@ -732,7 +732,7 @@ export const CONTENT: Record<Lang, Content> = {
       heading: 'Dónde he trabajado',
       items: [
         {
-          role: 'Cloud & AI Solution Engineer Intern',
+          role: 'Cloud & AI Solution Engineer',
           org: 'Microsoft',
           date: 'Ene 2026 - Actualidad',
           tag: 'Cloud e IA',
