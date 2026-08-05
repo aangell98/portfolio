@@ -32,6 +32,7 @@ export interface ExpItem {
   bullets: string[]
   tag: string
   logo: string
+  recommendation?: boolean
 }
 
 export interface Content {
@@ -600,6 +601,7 @@ export const CONTENT: Record<Lang, Content> = {
           date: 'Jan 2026 - Present',
           tag: 'Cloud & AI',
           logo: 'microsoft',
+          recommendation: true,
           bullets: [
             'Started as a Cloud & AI Specialist and evolved into a Solution Engineer, owning solutions end to end.',
             'Design and optimize scalable Azure cloud architectures for enterprise customers.',
@@ -744,6 +746,7 @@ export const CONTENT: Record<Lang, Content> = {
           date: 'Ene 2026 - Actualidad',
           tag: 'Cloud e IA',
           logo: 'microsoft',
+          recommendation: true,
           bullets: [
             'Empecé como Cloud & AI Specialist y evolucioné a Solution Engineer, asumiendo las soluciones de principio a fin.',
             'Diseño y optimizo arquitecturas cloud escalables en Azure para clientes empresariales.',

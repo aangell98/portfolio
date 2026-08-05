@@ -109,7 +109,7 @@ export default function Experience() {
                 key={i}
                 item={item}
                 i={i}
-                label={item.logo === 'microsoft' ? t.experience.recommendation : undefined}
+                label={item.recommendation ? t.experience.recommendation : undefined}
               />
             ))}
           </div>
