@@ -81,6 +81,8 @@ export interface Content {
     email: string
     cvEn: string
     cvEs: string
+    recommendationEn: string
+    recommendationEs: string
     backTop: string
     built: string
   }
@@ -567,7 +569,7 @@ export const CONTENT: Record<Lang, Content> = {
       titleB: 'Lara Martín',
       roles: ['Computer Engineer', 'Full Stack Developer', 'Cloud & AI', 'Game Dev & 3D'],
       intro:
-        'I design and build software end to end, from cloud and AI systems to full stack products and the odd 3D game. Always learning, always shipping. Currently a Cloud & AI Specialist Intern at Microsoft.',
+        'I design and build software end to end, from cloud and AI systems to full stack products and the odd 3D game. Always learning, always shipping. Currently a Cloud & AI Solution Engineer at Microsoft.',
       ctaWork: 'View my work',
       ctaCv: 'Download CV',
       ctaContact: 'Get in touch',
@@ -592,15 +594,17 @@ export const CONTENT: Record<Lang, Content> = {
       heading: 'Where I have worked',
       items: [
         {
-          role: 'Cloud & AI Specialist Intern',
+          role: 'Cloud & AI Solution Engineer',
           org: 'Microsoft',
           date: 'Jan 2026 - Present',
           tag: 'Cloud & AI',
           logo: 'microsoft',
           bullets: [
+            'Started as a Cloud & AI Specialist and evolved into a Solution Engineer, owning solutions end to end.',
             'Design and optimize scalable Azure cloud architectures for enterprise customers.',
             'Drive AI, application modernization and cloud adoption initiatives.',
             'Author technical documentation and partner with cross-functional teams.',
+            'Deliver technical demos and proofs of concept, building trusted advisor relationships with customers.',
           ],
         },
         {
@@ -694,6 +698,8 @@ export const CONTENT: Record<Lang, Content> = {
       email: 'Email me',
       cvEn: 'CV (English)',
       cvEs: 'CV (Spanish)',
+      recommendationEn: 'Recommendation letter (English)',
+      recommendationEs: 'Recommendation letter (Spanish)',
       backTop: 'Back to top',
       built: 'Designed and built by Ángel Luis Lara Martín with React, Three.js and Framer Motion.',
     },
@@ -706,7 +712,7 @@ export const CONTENT: Record<Lang, Content> = {
       titleB: 'Lara Martín',
       roles: ['Ingeniero Informático', 'Desarrollador Full Stack', 'Cloud e IA', 'Game Dev & 3D'],
       intro:
-        'Diseño y construyo software de principio a fin, desde sistemas cloud e IA hasta productos full stack y algún juego 3D. Siempre aprendiendo, siempre entregando. Actualmente Cloud & AI Specialist Intern en Microsoft.',
+        'Diseño y construyo software de principio a fin, desde sistemas cloud e IA hasta productos full stack y algún juego 3D. Siempre aprendiendo, siempre entregando. Actualmente Cloud & AI Solution Engineer en Microsoft.',
       ctaWork: 'Ver proyectos',
       ctaCv: 'Descargar CV',
       ctaContact: 'Hablemos',
@@ -731,15 +737,17 @@ export const CONTENT: Record<Lang, Content> = {
       heading: 'Dónde he trabajado',
       items: [
         {
-          role: 'Cloud & AI Specialist Intern',
+          role: 'Cloud & AI Solution Engineer',
           org: 'Microsoft',
           date: 'Ene 2026 - Actualidad',
           tag: 'Cloud e IA',
           logo: 'microsoft',
           bullets: [
+            'Empecé como Cloud & AI Specialist y evolucioné a Solution Engineer, asumiendo las soluciones de principio a fin.',
             'Diseño y optimizo arquitecturas cloud escalables en Azure para clientes empresariales.',
             'Impulso iniciativas de IA, modernización de aplicaciones y adopción cloud.',
             'Documento soluciones y colaboro con equipos multidisciplinares.',
+            'Realizo demos técnicas y pruebas de concepto, generando relaciones de confianza con los clientes.',
           ],
         },
         {
@@ -833,6 +841,8 @@ export const CONTENT: Record<Lang, Content> = {
       email: 'Enviar email',
       cvEn: 'CV (Inglés)',
       cvEs: 'CV (Español)',
+      recommendationEn: 'Carta de recomendación (Inglés)',
+      recommendationEs: 'Carta de recomendación (Español)',
       backTop: 'Volver arriba',
       built: 'Diseñado y construido por Ángel Luis Lara Martín con React, Three.js y Framer Motion.',
     },
@@ -873,4 +883,6 @@ export const LINKS = {
   learnEs: 'https://learn.microsoft.com/es-es/users/angelluislaramartin-9888/credentials?tab=credentials-tab',
   cvEn: 'https://github.com/aangell98/aangell98/raw/main/cv/CV_EN.pdf',
   cvEs: 'https://github.com/aangell98/aangell98/raw/main/cv/CV_ES.pdf',
+  recommendationLetterEn: 'https://github.com/aangell98/aangell98/raw/main/letters/Recommendation_Letter_EN.pdf',
+  recommendationLetterEs: 'https://github.com/aangell98/aangell98/raw/main/letters/Recommendation_Letter_ES.pdf',
 }
