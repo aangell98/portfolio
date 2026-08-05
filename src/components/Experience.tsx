@@ -3,9 +3,11 @@ import { motion, useScroll, useTransform } from 'framer-motion'
 import { useI18n } from '../i18n'
 import Reveal, { Kicker } from './ui/Reveal'
 import { OrgLogo } from './ui/Icons'
+import { LINKS } from '../data/content'
+import Magnetic from './ui/Magnetic'
 import type { ExpItem } from '../data/content'
 
-function TimelineItem({ item, i }: { item: ExpItem; i: number }) {
+function TimelineItem({ item, i, label }: { item: ExpItem; i: number; label?: string }) {
   return (
     <Reveal i={i}>
       <div className="relative pl-10 sm:pl-14">
@@ -36,9 +38,46 @@ function TimelineItem({ item, i }: { item: ExpItem; i: number }) {
               </li>
             ))}
           </ul>
+          {label && <RecommendationButton label={label} />}
         </div>
       </div>
     </Reveal>
+  )
+}
+
+function RecommendationButton({ label }: { label: string }) {
+  const { lang } = useI18n()
+  const href = lang === 'es' ? LINKS.recommendationLetterEs : LINKS.recommendationLetterEn
+  return (
+    <div className="mt-5">
+      <Magnetic>
+        <a
+          href={href}
+          target="_blank"
+          rel="noreferrer"
+          className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-cyan to-brand px-5 py-2.5 text-sm font-semibold text-ink shadow-[0_0_20px_rgba(70,199,224,0.35)] transition-shadow hover:shadow-[0_0_30px_rgba(70,199,224,0.6)]"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="transition-transform duration-300 group-hover:translate-y-0.5"
+            aria-hidden="true"
+          >
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
+          {label}
+        </a>
+      </Magnetic>
+    </div>
   )
 }
 
@@ -66,7 +105,12 @@ export default function Experience() {
           />
           <div className="space-y-8">
             {t.experience.items.map((item, i) => (
-              <TimelineItem key={i} item={item} i={i} />
+              <TimelineItem
+                key={i}
+                item={item}
+                i={i}
+                label={item.logo === 'microsoft' ? t.experience.recommendation : undefined}
+              />
             ))}
           </div>
         </div>

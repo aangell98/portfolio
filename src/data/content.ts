@@ -53,7 +53,7 @@ export interface Content {
     body: string[]
     stats: { value: string; label: string }[]
   }
-  experience: { kicker: string; heading: string; items: ExpItem[] }
+  experience: { kicker: string; heading: string; recommendation: string; items: ExpItem[] }
   education: { kicker: string; heading: string; items: ExpItem[] }
   work: {
     kicker: string
@@ -592,6 +592,7 @@ export const CONTENT: Record<Lang, Content> = {
     experience: {
       kicker: 'Experience',
       heading: 'Where I have worked',
+      recommendation: 'Recommendation letter',
       items: [
         {
           role: 'Cloud & AI Solution Engineer',
@@ -735,6 +736,7 @@ export const CONTENT: Record<Lang, Content> = {
     experience: {
       kicker: 'Experiencia',
       heading: 'Dónde he trabajado',
+      recommendation: 'Carta de recomendación',
       items: [
         {
           role: 'Cloud & AI Solution Engineer',
