@@ -56,12 +56,22 @@ export default function Contact() {
             </Magnetic>
             <Magnetic>
               <a
-                href={LINKS.recommendationLetter}
+                href={LINKS.recommendationLetterEn}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-2 rounded-full border border-white/15 px-6 py-3.5 text-sm font-semibold text-white/90 transition-colors hover:border-cyan/60 hover:text-cyan"
               >
-                {t.contact.recommendation}
+                {t.contact.recommendationEn}
+              </a>
+            </Magnetic>
+            <Magnetic>
+              <a
+                href={LINKS.recommendationLetterEs}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 rounded-full border border-white/15 px-6 py-3.5 text-sm font-semibold text-white/90 transition-colors hover:border-cyan/60 hover:text-cyan"
+              >
+                {t.contact.recommendationEs}
               </a>
             </Magnetic>
           </div>

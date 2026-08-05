@@ -81,7 +81,8 @@ export interface Content {
     email: string
     cvEn: string
     cvEs: string
-    recommendation: string
+    recommendationEn: string
+    recommendationEs: string
     backTop: string
     built: string
   }
@@ -697,7 +698,8 @@ export const CONTENT: Record<Lang, Content> = {
       email: 'Email me',
       cvEn: 'CV (English)',
       cvEs: 'CV (Spanish)',
-      recommendation: 'Recommendation letter',
+      recommendationEn: 'Recommendation letter (English)',
+      recommendationEs: 'Recommendation letter (Spanish)',
       backTop: 'Back to top',
       built: 'Designed and built by Ángel Luis Lara Martín with React, Three.js and Framer Motion.',
     },
@@ -839,7 +841,8 @@ export const CONTENT: Record<Lang, Content> = {
       email: 'Enviar email',
       cvEn: 'CV (Inglés)',
       cvEs: 'CV (Español)',
-      recommendation: 'Carta de recomendación',
+      recommendationEn: 'Carta de recomendación (Inglés)',
+      recommendationEs: 'Carta de recomendación (Español)',
       backTop: 'Volver arriba',
       built: 'Diseñado y construido por Ángel Luis Lara Martín con React, Three.js y Framer Motion.',
     },
@@ -880,5 +883,6 @@ export const LINKS = {
   learnEs: 'https://learn.microsoft.com/es-es/users/angelluislaramartin-9888/credentials?tab=credentials-tab',
   cvEn: 'https://github.com/aangell98/aangell98/raw/main/cv/CV_EN.pdf',
   cvEs: 'https://github.com/aangell98/aangell98/raw/main/cv/CV_ES.pdf',
-  recommendationLetter: 'https://github.com/aangell98/aangell98/raw/main/letters/Recommendation_Letter.pdf',
+  recommendationLetterEn: 'https://github.com/aangell98/aangell98/raw/main/letters/Recommendation_Letter_EN.pdf',
+  recommendationLetterEs: 'https://github.com/aangell98/aangell98/raw/main/letters/Recommendation_Letter_ES.pdf',
 }
