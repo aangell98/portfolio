@@ -83,7 +83,7 @@ export default function Nav() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[60] bg-ink/95 backdrop-blur-xl md:hidden"
+            className="fixed inset-0 z-[60] overflow-y-auto bg-ink/95 backdrop-blur-xl md:hidden"
           >
             <div className="flex items-center justify-between px-6 py-4">
               <Logo />
@@ -95,7 +95,7 @@ export default function Nav() {
                 &times;
               </button>
             </div>
-            <div className="mt-12 flex flex-col items-center gap-7">
+            <div className="mt-12 flex flex-col items-center gap-7 pb-10 [@media(max-height:560px)]:mt-6 [@media(max-height:560px)]:gap-5">
               {links.map((l, i) => (
                 <motion.a
                   key={l.href}
@@ -104,7 +104,7 @@ export default function Nav() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 + i * 0.07 }}
-                  className="text-2xl font-semibold text-white/90"
+                  className="text-2xl font-semibold text-white/90 [@media(max-height:560px)]:text-xl"
                 >
                   {l.label}
                 </motion.a>

@@ -22,6 +22,7 @@ export interface ProjectItem {
   category: Category
   repos: RepoLink[]
   live?: string
+  doc?: string
   accent: string
 }
 
@@ -67,6 +68,7 @@ export interface Content {
     livePreview: string
     openLive: string
     viewCode: string
+    thesisDoc: string
     featuresLabel: string
     highlightsLabel: string
     techLabel: string
@@ -122,6 +124,7 @@ function projectsEN(): ProjectItem[] {
       category: 'flagship',
       repos: ENTANGLE_REPOS,
       live: 'https://blue-rock-0771cc403.1.azurestaticapps.net',
+      doc: 'entangle-tfg-memoria.pdf',
       shot: 'projects/shots/entangle.png',
       accent: '#8b5cf6',
     },
@@ -670,6 +673,7 @@ export const CONTENT: Record<Lang, Content> = {
       livePreview: 'Live preview',
       openLive: 'Open live demo',
       viewCode: 'View code',
+      thesisDoc: "Bachelor's Thesis (PDF)",
       featuresLabel: 'Key features',
       highlightsLabel: 'Highlights',
       techLabel: 'Built with',
@@ -815,6 +819,7 @@ export const CONTENT: Record<Lang, Content> = {
       livePreview: 'Vista en vivo',
       openLive: 'Abrir demo en vivo',
       viewCode: 'Ver código',
+      thesisDoc: 'Memoria del TFG (PDF)',
       featuresLabel: 'Características',
       highlightsLabel: 'Aspectos destacados',
       techLabel: 'Construido con',

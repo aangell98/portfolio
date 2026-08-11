@@ -113,7 +113,7 @@ export default function Hero() {
       <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-b from-ink/40 via-transparent to-ink" />
 
       {/* content */}
-      <div className="relative z-20 mx-auto flex min-h-[100svh] max-w-6xl flex-col justify-center px-6">
+      <div className="relative z-20 mx-auto flex min-h-[100svh] max-w-6xl flex-col justify-center px-6 [@media(max-height:560px)]:justify-start [@media(max-height:560px)]:pb-16 [@media(max-height:560px)]:pt-24">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
