@@ -573,7 +573,7 @@ export const CONTENT: Record<Lang, Content> = {
       titleB: 'Lara Martín',
       roles: ['Computer Engineer', 'Full Stack Developer', 'Cloud & AI', 'Game Dev & 3D'],
       intro:
-        'I design and build software end to end, from cloud and AI systems to full stack products and the odd 3D game. Always learning, always shipping. Currently a Cloud & AI Solution Engineer at Microsoft.',
+        'I design and build software end to end, from cloud and AI systems to full stack products and the odd 3D game. Always learning, always shipping.',
       ctaWork: 'View my work',
       ctaCv: 'Download CV',
       ctaContact: 'Get in touch',
@@ -601,7 +601,7 @@ export const CONTENT: Record<Lang, Content> = {
         {
           role: 'Cloud & AI Solution Engineer',
           org: 'Microsoft',
-          date: 'Jan 2026 - Present',
+          date: 'Jan 2026 - Sep 2026',
           tag: 'Cloud & AI',
           logo: 'microsoft',
           recommendation: true,
@@ -719,7 +719,7 @@ export const CONTENT: Record<Lang, Content> = {
       titleB: 'Lara Martín',
       roles: ['Ingeniero Informático', 'Desarrollador Full Stack', 'Cloud e IA', 'Game Dev & 3D'],
       intro:
-        'Diseño y construyo software de principio a fin, desde sistemas cloud e IA hasta productos full stack y algún juego 3D. Siempre aprendiendo, siempre entregando. Actualmente Cloud & AI Solution Engineer en Microsoft.',
+        'Diseño y construyo software de principio a fin, desde sistemas cloud e IA hasta productos full stack y algún juego 3D. Siempre aprendiendo, siempre entregando.',
       ctaWork: 'Ver proyectos',
       ctaCv: 'Descargar CV',
       ctaContact: 'Hablemos',
@@ -747,7 +747,7 @@ export const CONTENT: Record<Lang, Content> = {
         {
           role: 'Cloud & AI Solution Engineer',
           org: 'Microsoft',
-          date: 'Ene 2026 - Actualidad',
+          date: 'Ene 2026 - Sep 2026',
           tag: 'Cloud e IA',
           logo: 'microsoft',
           recommendation: true,
