@@ -739,7 +739,7 @@ export default function EntangleScene() {
         className="!absolute inset-0"
         frameloop={active ? 'always' : 'never'}
         dpr={quality === 'low' ? 1 : [1, 2]}
-        camera={{ position: [0, 0.6, 11], fov: 52 }}
+        camera={{ position: [0, 0.6, 12.5], fov: 52 }}
         gl={{ antialias: quality === 'high', alpha: false, powerPreference: 'high-performance' }}
         onCreated={({ gl }) => gl.setClearColor('#05080f', 1)}
       >
