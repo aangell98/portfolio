@@ -607,10 +607,10 @@ export const CONTENT: Record<Lang, Content> = {
           recommendation: true,
           bullets: [
             'Started as a Cloud & AI Specialist and evolved into a Solution Engineer, owning solutions end to end.',
-            'Design and optimize scalable Azure cloud architectures for enterprise customers.',
-            'Drive AI, application modernization and cloud adoption initiatives.',
-            'Author technical documentation and partner with cross-functional teams.',
-            'Deliver technical demos and proofs of concept, building trusted advisor relationships with customers.',
+            'Designed and optimized scalable Azure cloud architectures for enterprise customers.',
+            'Drove AI, application modernization and cloud adoption initiatives.',
+            'Authored technical documentation and partnered with cross-functional teams.',
+            'Delivered technical demos and proofs of concept, building trusted advisor relationships with customers.',
           ],
         },
         {
@@ -753,10 +753,10 @@ export const CONTENT: Record<Lang, Content> = {
           recommendation: true,
           bullets: [
             'Empecé como Cloud & AI Specialist y evolucioné a Solution Engineer, asumiendo las soluciones de principio a fin.',
-            'Diseño y optimizo arquitecturas cloud escalables en Azure para clientes empresariales.',
-            'Impulso iniciativas de IA, modernización de aplicaciones y adopción cloud.',
-            'Documento soluciones y colaboro con equipos multidisciplinares.',
-            'Realizo demos técnicas y pruebas de concepto, generando relaciones de confianza con los clientes.',
+            'Diseñé y optimicé arquitecturas cloud escalables en Azure para clientes empresariales.',
+            'Impulsé iniciativas de IA, modernización de aplicaciones y adopción cloud.',
+            'Documenté soluciones y colaboré con equipos multidisciplinares.',
+            'Realicé demos técnicas y pruebas de concepto, generando relaciones de confianza con los clientes.',
           ],
         },
         {
