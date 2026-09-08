@@ -606,11 +606,11 @@ export const CONTENT: Record<Lang, Content> = {
           logo: 'microsoft',
           recommendation: true,
           bullets: [
-            'Started as a Cloud & AI Specialist and evolved into a Solution Engineer, owning solutions end to end.',
-            'Designed and optimized scalable Azure cloud architectures for enterprise customers.',
-            'Drove AI, application modernization and cloud adoption initiatives.',
-            'Authored technical documentation and partnered with cross-functional teams.',
-            'Delivered technical demos and proofs of concept, building trusted advisor relationships with customers.',
+            'Designed and optimized scalable Azure cloud architectures, improving performance and cost efficiency for enterprise customers.',
+            'Independently took 2 AI concepts from ideation to sale for an IBEX 35 enterprise customer, defining the technical approach and building customer-facing demos from scratch.',
+            'Presented AI solutions and technical demos directly to customers and senior stakeholders, translating emerging technologies into concrete business value.',
+            'Supported cloud adoption and application modernization initiatives, helping enterprise customers evaluate and accelerate their transition to Azure.',
+            'Collaborated with account teams and cross-functional stakeholders to translate complex customer requirements into scalable technical solutions.',
           ],
         },
         {
@@ -752,11 +752,11 @@ export const CONTENT: Record<Lang, Content> = {
           logo: 'microsoft',
           recommendation: true,
           bullets: [
-            'Empecé como Cloud & AI Specialist y evolucioné a Solution Engineer, asumiendo las soluciones de principio a fin.',
-            'Diseñé y optimicé arquitecturas cloud escalables en Azure para clientes empresariales.',
-            'Impulsé iniciativas de IA, modernización de aplicaciones y adopción cloud.',
-            'Documenté soluciones y colaboré con equipos multidisciplinares.',
-            'Realicé demos técnicas y pruebas de concepto, generando relaciones de confianza con los clientes.',
+            'Diseñé y optimicé arquitecturas cloud escalables en Azure, mejorando el rendimiento y la eficiencia de costes para clientes empresariales.',
+            'Llevé de forma independiente 2 conceptos de IA desde la ideación hasta la venta para un cliente empresarial del IBEX 35, definiendo el enfoque técnico y creando demos orientadas al cliente desde cero.',
+            'Presenté soluciones de IA y demos técnicas directamente a clientes y perfiles senior, traduciendo tecnologías emergentes en valor de negocio concreto.',
+            'Apoyé iniciativas de adopción cloud y modernización de aplicaciones, ayudando a clientes empresariales a evaluar y acelerar su transición a Azure.',
+            'Colaboré con equipos de cuenta y stakeholders multidisciplinares para traducir requisitos complejos de clientes en soluciones técnicas escalables.',
           ],
         },
         {
