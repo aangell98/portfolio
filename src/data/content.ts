@@ -607,7 +607,7 @@ export const CONTENT: Record<Lang, Content> = {
           recommendation: true,
           bullets: [
             'Designed and optimized scalable Azure cloud architectures, improving performance and cost efficiency for enterprise customers.',
-            'Independently took 2 AI concepts from ideation to sale for an IBEX 35 enterprise customer, defining the technical approach and building customer-facing demos from scratch.',
+            'Independently took two AI concepts from ideation through commercialization for an IBEX 35 enterprise customer, defining the technical approach and building customer-facing demos from scratch.',
             'Presented AI solutions and technical demos directly to customers and senior stakeholders, translating emerging technologies into concrete business value.',
             'Supported cloud adoption and application modernization initiatives, helping enterprise customers evaluate and accelerate their transition to Azure.',
             'Collaborated with account teams and cross-functional stakeholders to translate complex customer requirements into scalable technical solutions.',
@@ -753,7 +753,7 @@ export const CONTENT: Record<Lang, Content> = {
           recommendation: true,
           bullets: [
             'Diseñé y optimicé arquitecturas cloud escalables en Azure, mejorando el rendimiento y la eficiencia de costes para clientes empresariales.',
-            'Llevé de forma independiente 2 conceptos de IA desde la ideación hasta la venta para un cliente empresarial del IBEX 35, definiendo el enfoque técnico y creando demos orientadas al cliente desde cero.',
+            'Llevé de forma independiente dos conceptos de IA desde la ideación hasta su comercialización para un cliente empresarial del IBEX 35, definiendo el enfoque técnico y creando demos orientadas al cliente desde cero.',
             'Presenté soluciones de IA y demos técnicas directamente a clientes y perfiles senior, traduciendo tecnologías emergentes en valor de negocio concreto.',
             'Apoyé iniciativas de adopción cloud y modernización de aplicaciones, ayudando a clientes empresariales a evaluar y acelerar su transición a Azure.',
             'Colaboré con equipos de cuenta y stakeholders multidisciplinares para traducir requisitos complejos de clientes en soluciones técnicas escalables.',
