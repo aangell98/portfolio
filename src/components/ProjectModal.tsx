@@ -82,6 +82,12 @@ export default function ProjectModal({ project, onClose }: { project: ProjectIte
                     <h3 className="text-2xl font-bold text-white">{project.name}</h3>
                     {project.award && <AwardBadge label={project.award} />}
                   </div>
+                  {project.paperBadge && (
+                    <div className="mt-3 inline-flex items-center gap-2 rounded-full border border-cyan/30 bg-cyan/10 px-3 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-wide text-cyan">
+                      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-cyan shadow-[0_0_8px_rgba(34,211,238,0.9)]" />
+                      {project.paperBadge}
+                    </div>
+                  )}
                   {project.metrics && (
                     <div className="mt-2 flex flex-wrap gap-1.5">
                       {project.metrics.map((m) => (

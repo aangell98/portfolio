@@ -113,6 +113,12 @@ function FeaturedCard({ p, onOpen }: { p: ProjectItem; onOpen: (p: ProjectItem) 
               <CatBadge category={p.category} />
               {p.award && <AwardBadge label={p.award} />}
             </div>
+            {p.paperBadge && (
+              <div className="mt-3 inline-flex max-w-xl items-center gap-2 rounded-full border border-cyan/30 bg-cyan/10 px-3 py-1.5 font-mono text-[10px] font-semibold uppercase tracking-wide text-cyan shadow-[0_0_24px_rgba(34,211,238,0.12)]">
+                <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-cyan shadow-[0_0_8px_rgba(34,211,238,0.9)]" />
+                {p.paperBadge}
+              </div>
+            )}
             <h3 className="mt-3 text-2xl font-bold text-white sm:text-3xl">{p.name}</h3>
             <p className="mt-3 max-w-2xl text-sm leading-relaxed text-mist/75 sm:text-base">{p.blurb}</p>
             {p.metrics && (

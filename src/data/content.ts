@@ -16,6 +16,7 @@ export interface ProjectItem {
   tags: string[]
   metrics?: string[]
   award?: string
+  paperBadge?: string
   icon?: string
   logo?: string
   shot?: string
@@ -120,6 +121,7 @@ function projectsEN(): ProjectItem[] {
       tags: ['Python', 'GitHub API', 'RAG', 'Azure OpenAI', 'Cosmos DB', 'React', 'Three.js'],
       metrics: ['96.7% routing accuracy', '1,087 tests', '0.96 modularity', '2 repositories'],
       award: 'Distinction 9/10',
+      paperBadge: 'Peer-reviewed paper accepted for publication at QCE2026',
       logo: 'projects/entangle.png',
       category: 'flagship',
       repos: ENTANGLE_REPOS,
@@ -367,7 +369,7 @@ function projectsEN(): ProjectItem[] {
 
 function projectsES(): ProjectItem[] {
   const en = projectsEN()
-  const es: Record<string, { blurb: string; longBlurb?: string; features?: string[]; highlights?: string[]; tags?: string[]; metrics?: string[]; award?: string }> = {
+  const es: Record<string, { blurb: string; longBlurb?: string; features?: string[]; highlights?: string[]; tags?: string[]; metrics?: string[]; award?: string; paperBadge?: string }> = {
     entangle: {
       blurb:
         'Mi Trabajo Fin de Grado. Una plataforma que mapea, analiza y visualiza el ecosistema open source de la computación cuántica en GitHub. Se divide en dos repositorios: el motor Core (ingesta config-driven con 6 workers y análisis de redes) y el Visualizer (grafo de colaboración 2D, universo cuántico 3D y un asistente de IA con RAG).',
@@ -387,6 +389,7 @@ function projectsES(): ProjectItem[] {
       ],
       metrics: ['96,7% de acierto', '1.087 tests', '0,96 modularidad', '2 repositorios'],
       award: 'Sobresaliente 9/10',
+      paperBadge: 'Paper revisado por pares aceptado para publicación en QCE2026',
       tags: ['Python', 'GitHub API', 'RAG', 'Azure OpenAI', 'Cosmos DB', 'React', 'Three.js'],
     },
     insurance: {
@@ -649,7 +652,7 @@ export const CONTENT: Record<Lang, Content> = {
           logo: 'uclm',
           bullets: [
             'Distributed architectures, cloud technologies, AI fundamentals and process automation.',
-            'Thesis: Entangle, mapping and analysis of the quantum computing ecosystem on GitHub.',
+            'Thesis: Entangle, mapping and analysis of the quantum computing ecosystem on GitHub. Peer-reviewed paper accepted for publication at QCE2026.',
           ],
         },
         {
@@ -795,7 +798,7 @@ export const CONTENT: Record<Lang, Content> = {
           logo: 'uclm',
           bullets: [
             'Arquitecturas distribuidas, tecnologías cloud, fundamentos de IA y automatización de procesos.',
-            'TFG: Entangle, mapeo y análisis del ecosistema de computación cuántica en GitHub.',
+            'TFG: Entangle, mapeo y análisis del ecosistema de computación cuántica en GitHub. Paper revisado por pares aceptado para publicación en QCE2026.',
           ],
         },
         {
