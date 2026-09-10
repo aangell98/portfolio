@@ -227,6 +227,17 @@ export default function ProjectModal({ project, onClose }: { project: ProjectIte
                   {t.work.thesisDoc}
                 </a>
               )}
+              {project.paperDoc && (
+                <a
+                  href={asset(project.paperDoc)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 rounded-full border border-cyan/30 bg-cyan/10 px-5 py-3 text-sm font-semibold text-cyan transition-colors hover:border-cyan/60 hover:bg-cyan/15"
+                >
+                  <DocMark />
+                  {t.work.paperDoc}
+                </a>
+              )}
             </div>
           </motion.div>
         </motion.div>

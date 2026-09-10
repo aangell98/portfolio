@@ -24,6 +24,7 @@ export interface ProjectItem {
   repos: RepoLink[]
   live?: string
   doc?: string
+  paperDoc?: string
   accent: string
 }
 
@@ -70,6 +71,7 @@ export interface Content {
     openLive: string
     viewCode: string
     thesisDoc: string
+    paperDoc: string
     featuresLabel: string
     highlightsLabel: string
     techLabel: string
@@ -127,6 +129,7 @@ function projectsEN(): ProjectItem[] {
       repos: ENTANGLE_REPOS,
       live: 'https://angel-tfg-uclm.github.io/Entangle-Visualizer/',
       doc: 'entangle-tfg-memoria.pdf',
+      paperDoc: 'entangle-qce2026-paper.pdf',
       shot: 'projects/shots/entangle.png',
       accent: '#8b5cf6',
     },
@@ -677,6 +680,7 @@ export const CONTENT: Record<Lang, Content> = {
       openLive: 'Open demo',
       viewCode: 'View code',
       thesisDoc: "Bachelor's Thesis (PDF)",
+      paperDoc: 'QCE2026 Paper (PDF)',
       featuresLabel: 'Key features',
       highlightsLabel: 'Highlights',
       techLabel: 'Built with',
@@ -823,6 +827,7 @@ export const CONTENT: Record<Lang, Content> = {
       openLive: 'Abrir demo',
       viewCode: 'Ver código',
       thesisDoc: 'Memoria del TFG (PDF)',
+      paperDoc: 'Paper de QCE2026 (PDF)',
       featuresLabel: 'Características',
       highlightsLabel: 'Aspectos destacados',
       techLabel: 'Construido con',
