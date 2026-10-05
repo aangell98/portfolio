@@ -24,7 +24,7 @@ export interface ProjectItem {
   repos: RepoLink[]
   live?: string
   doc?: string
-  paperDoc?: string
+  paperUrl?: string
   accent: string
 }
 
@@ -71,7 +71,7 @@ export interface Content {
     openLive: string
     viewCode: string
     thesisDoc: string
-    paperDoc: string
+    paperOnline: string
     featuresLabel: string
     highlightsLabel: string
     techLabel: string
@@ -105,31 +105,34 @@ function projectsEN(): ProjectItem[] {
       id: 'entangle',
       name: 'Entangle',
       blurb:
-        'My Bachelor\'s Thesis. A platform that maps, analyzes and visualizes the open-source quantum computing ecosystem on GitHub. Split into two repositories: the Core engine (config-driven ingestion with 6 workers and network analysis) and the Visualizer (2D collaboration graph, 3D quantum universe and a RAG-powered AI assistant).',
+        'My Bachelor\'s Thesis and independent research project. I built an open-source observatory for the quantum-computing ecosystem on GitHub, including a six-worker conversational AI system with RAG over ~11,000 vector-store fragments.',
       longBlurb:
-        'Entangle is a research-grade analytics platform that maps and analyzes the global open-source quantum computing ecosystem on GitHub. The Core backend crawls repositories, organizations and developers matching a taxonomy of 70+ quantum keywords, enriches them with collaboration metadata, computes network metrics and serves everything through a 56-endpoint FastAPI. The Visualizer turns that data into an interactive dashboard with a 2D collaboration graph, an immersive 3D quantum universe and an AI chat assistant.',
+        'I designed and built Entangle independently as an open-source observatory of the quantum-computing ecosystem on GitHub. Its six-phase GitHub GraphQL pipeline is seeded by 71 quantum keywords, and its Core analyzes repositories, contributors and organizations through a collaboration graph and a 56-endpoint FastAPI. The Visualizer presents the results in a 2D dashboard and 3D view. I also implemented a configurable conversational system with six specialized workers and RAG over ~11,000 vector-store fragments; it achieved 96.7% routing accuracy. I am first author of the paper, accepted and presented at QCE 2026 and published on arXiv. The paper analyzes a June 2026 snapshot of 1,500+ repositories, 27,000 contributors and 400 organizations, identifying 2,387 cross-organization bridge contributors and a bus factor of 1 in 81.7% of analyzed repositories. The collaboration graph contains 30,970 nodes, 101,190 edges and 752 communities (modularity 0.96). The platform is validated with 1,087 automated tests.',
       features: [
-        'Domain-aware ingestion crawling GitHub via 70+ quantum keywords across repos, users and organizations',
-        'Collaboration network analysis with NetworkX: centrality, community detection and bridge-user identification',
-        '2D force-directed graph plus an immersive 3D quantum universe built with React Three Fiber',
-        'AI chat assistant (Azure AI Foundry) with tool-calling over the live dataset, streamed via SSE',
+        'Six-phase GitHub GraphQL pipeline seeded by 71 quantum keywords',
+        'Configurable six-worker conversational system with RAG over ~11,000 vector-store fragments',
+        '96.7% routing accuracy; validated with 1,087 automated tests',
+        'Network analysis of 1,500+ repositories, 27,000 contributors and 400 organizations',
+        '2D collaboration dashboard and 3D visualization built with React and Three.js',
         'Multi-language UI in 5 languages with KaTeX-rendered quantum glossary',
       ],
       highlights: [
-        'SonarQube quality gate PASSED, A/A/A ratings, ~28k LOC across both repos',
+        '2,387 cross-organization bridge contributors identified; 81.7% of analyzed repositories have a bus factor of 1',
+        'Collaboration graph: 30,970 nodes, 101,190 edges, 752 communities, modularity 0.96',
+        'First-author paper accepted and presented at QCE 2026; published on arXiv',
         '56 REST endpoints with SSE streaming and a permanent metric cache',
         'One-command azd deploy: Container Apps, Cosmos DB vCore, AI Foundry, managed identity',
       ],
-      tags: ['Python', 'GitHub API', 'RAG', 'Azure OpenAI', 'Cosmos DB', 'React', 'Three.js'],
-      metrics: ['96.7% routing accuracy', '1,087 tests', '0.96 modularity', '2 repositories'],
+      tags: ['Python', 'FastAPI', 'RAG', 'Azure OpenAI', 'Cosmos DB', 'NetworkX', 'React', 'Three.js', 'Docker', 'GitHub Actions'],
+      metrics: ['~11,000 RAG fragments', '96.7% routing accuracy', '1,087 automated tests', '1,500+ repositories'],
       award: 'Distinction 9/10',
-      paperBadge: 'Peer-reviewed paper accepted for publication at QCE2026',
+      paperBadge: 'First-author paper accepted and presented at QCE 2026 · Published on arXiv',
       logo: 'projects/entangle.png',
       category: 'flagship',
       repos: ENTANGLE_REPOS,
       live: 'https://angel-tfg-uclm.github.io/Entangle-Visualizer/',
       doc: 'entangle-tfg-memoria.pdf',
-      paperDoc: 'entangle-qce2026-paper.pdf',
+      paperUrl: 'https://arxiv.org/abs/2609.28349',
       shot: 'projects/shots/entangle.png',
       accent: '#8b5cf6',
     },
@@ -375,24 +378,27 @@ function projectsES(): ProjectItem[] {
   const es: Record<string, { blurb: string; longBlurb?: string; features?: string[]; highlights?: string[]; tags?: string[]; metrics?: string[]; award?: string; paperBadge?: string }> = {
     entangle: {
       blurb:
-        'Mi Trabajo Fin de Grado. Una plataforma que mapea, analiza y visualiza el ecosistema open source de la computación cuántica en GitHub. Se divide en dos repositorios: el motor Core (ingesta config-driven con 6 workers y análisis de redes) y el Visualizer (grafo de colaboración 2D, universo cuántico 3D y un asistente de IA con RAG).',
+        'Mi Trabajo Fin de Grado y proyecto de investigación independiente. Construí un observatorio open source del ecosistema de computación cuántica en GitHub, con un sistema conversacional de seis workers y RAG sobre ~11.000 fragmentos en un vector store.',
       longBlurb:
-        'Entangle es una plataforma de analítica que mapea y analiza el ecosistema open source de computación cuántica en GitHub. El backend Core rastrea repositorios, organizaciones y desarrolladores que encajan con una taxonomía de más de 70 palabras clave cuánticas, los enriquece con metadatos de colaboración, calcula métricas de red y lo sirve todo a través de una FastAPI de 56 endpoints. El Visualizer convierte esos datos en un dashboard interactivo con un grafo de colaboración 2D, un universo cuántico 3D inmersivo y un asistente de IA.',
+        'Diseñé y construí Entangle de forma independiente como un observatorio open source del ecosistema de computación cuántica en GitHub. Su pipeline de seis fases basado en GitHub GraphQL parte de 71 palabras clave cuánticas; Core analiza repositorios, colaboradores y organizaciones mediante un grafo de colaboración y una FastAPI de 56 endpoints. Visualizer presenta los resultados en un dashboard 2D y una vista 3D. También implementé un sistema conversacional configurable con seis workers y RAG sobre ~11.000 fragmentos en un vector store, que alcanzó un 96,7% de acierto de enrutado. Soy el primer autor del paper, aceptado y presentado en QCE 2026 y publicado en arXiv. El artículo analiza una instantánea de junio de 2026 con más de 1.500 repositorios, 27.000 colaboradores y 400 organizaciones; identifica 2.387 colaboradores puente entre organizaciones y un bus factor de 1 en el 81,7% de los repositorios analizados. El grafo contiene 30.970 nodos, 101.190 aristas y 752 comunidades (modularidad: 0,96). La plataforma está validada con 1.087 tests automatizados.',
       features: [
-        'Ingesta por dominio que rastrea GitHub con más de 70 palabras clave cuánticas en repos, usuarios y organizaciones',
-        'Análisis de red de colaboración con NetworkX: centralidad, detección de comunidades e identificación de bridge users',
-        'Grafo dirigido por fuerzas 2D y un universo cuántico 3D inmersivo con React Three Fiber',
-        'Asistente de IA (Azure AI Foundry) con tool-calling sobre el dataset en vivo, vía SSE',
+        'Pipeline de seis fases con GitHub GraphQL y 71 palabras clave cuánticas',
+        'Sistema conversacional configurable de seis workers con RAG sobre ~11.000 fragmentos en un vector store',
+        '96,7% de acierto de enrutado; validado con 1.087 tests automatizados',
+        'Análisis de más de 1.500 repositorios, 27.000 colaboradores y 400 organizaciones',
+        'Dashboard de colaboración 2D y visualización 3D con React y Three.js',
         'Interfaz multiidioma en 5 lenguas con glosario cuántico renderizado en KaTeX',
       ],
       highlights: [
-        'Quality gate de SonarQube superado, valoraciones A/A/A, ~28k LOC entre ambos repos',
+        'Identificados 2.387 colaboradores puente entre organizaciones; 81,7% de repositorios analizados con bus factor 1',
+        'Grafo: 30.970 nodos, 101.190 aristas, 752 comunidades y modularidad 0,96',
+        'Paper del que soy primer autor, aceptado y presentado en QCE 2026; publicado en arXiv',
         '56 endpoints REST con streaming SSE y caché permanente de métricas',
         'Despliegue azd en un comando: Container Apps, Cosmos DB vCore, AI Foundry, identidad gestionada',
       ],
-      metrics: ['96,7% de acierto', '1.087 tests', '0,96 modularidad', '2 repositorios'],
+      metrics: ['~11.000 fragmentos RAG', '96,7% de acierto de enrutado', '1.087 tests automatizados', '+1.500 repositorios'],
       award: 'Sobresaliente 9/10',
-      paperBadge: 'Paper revisado por pares aceptado para publicación en QCE2026',
+      paperBadge: 'Paper de primer autor aceptado y presentado en QCE 2026 · Publicado en arXiv',
       tags: ['Python', 'GitHub API', 'RAG', 'Azure OpenAI', 'Cosmos DB', 'React', 'Three.js'],
     },
     insurance: {
@@ -579,7 +585,7 @@ export const CONTENT: Record<Lang, Content> = {
       titleB: 'Lara Martín',
       roles: ['Computer Engineer', 'Full Stack Developer', 'Cloud & AI', 'Game Dev & 3D'],
       intro:
-        'I design and build software end to end, from cloud and AI systems to full stack products and the odd 3D game. Always learning, always shipping.',
+        'Computer Engineer specialized in Generative AI, software development and cloud. Experience at Microsoft designing Azure solutions and developing AI concepts for enterprise customers, from technical definition to customer-facing demos.',
       ctaWork: 'View my work',
       ctaCv: 'Download CV',
       ctaContact: 'Get in touch',
@@ -589,8 +595,8 @@ export const CONTENT: Record<Lang, Content> = {
       kicker: 'About',
       heading: 'Computer Engineer who loves to build',
       body: [
-        'I am a Computer Engineer specialized in cloud and AI, and I move comfortably across the whole stack: backend, frontend and whatever it takes. I design scalable systems, build AI agents and RAG, and ship products end to end.',
-        'Off the clock you will find me building 3D games, prototyping ideas and learning nonstop. Curious, proactive and a fast learner who cares about clean engineering and real impact.',
+        'I am a Computer Engineer specialized in Generative AI, software development and cloud. At Microsoft, I designed Azure solutions and developed AI concepts for enterprise customers, from technical definition to customer-facing demos.',
+        'I have hands-on experience with Python, RAG, AI agents, Azure OpenAI, Docker and CI/CD. I am also the creator and first author of Entangle, an independent research project on the quantum-computing ecosystem.',
       ],
       stats: [
         { value: '10+', label: 'Projects shipped' },
@@ -612,11 +618,12 @@ export const CONTENT: Record<Lang, Content> = {
           logo: 'microsoft',
           recommendation: true,
           bullets: [
-            'Designed and optimized scalable Azure cloud architectures, improving performance and cost efficiency for enterprise customers.',
-            'Independently took two AI concepts from ideation through commercialization for an IBEX 35 enterprise customer, defining the technical approach and building customer-facing demos from scratch.',
-            'Presented AI solutions and technical demos directly to customers and senior stakeholders, translating emerging technologies into concrete business value.',
+            'Designed and optimized scalable Azure cloud architectures, balancing performance, reliability and cost efficiency for enterprise customers.',
+            'Took two AI concepts from technical ideation to commercialization for IBEX 35 enterprise customers, defining the technical approach and building customer-facing demos from scratch.',
+            'Developed and presented AI solutions and technical demos to customers and senior stakeholders, translating emerging GenAI capabilities into concrete business use cases.',
             'Supported cloud adoption and application modernization initiatives, helping enterprise customers evaluate and accelerate their transition to Azure.',
-            'Collaborated with account teams and cross-functional stakeholders to translate complex customer requirements into scalable technical solutions.',
+            'Collaborated with account teams and cross-functional stakeholders to translate customer requirements into scalable technical solutions.',
+            'Received a formal letter of recommendation from Microsoft following my tenure as Cloud & AI Solution Engineer.',
           ],
         },
         {
@@ -655,7 +662,7 @@ export const CONTENT: Record<Lang, Content> = {
           logo: 'uclm',
           bullets: [
             'Distributed architectures, cloud technologies, AI fundamentals and process automation.',
-            'Thesis: Entangle, mapping and analysis of the quantum computing ecosystem on GitHub. Peer-reviewed paper accepted for publication at QCE2026.',
+            'Thesis: Entangle, mapping and analysis of the quantum-computing ecosystem on GitHub (grade: 9/10, Distinction). First-author paper accepted and presented at QCE 2026; published on arXiv.',
           ],
         },
         {
@@ -680,7 +687,7 @@ export const CONTENT: Record<Lang, Content> = {
       openLive: 'Open demo',
       viewCode: 'View code',
       thesisDoc: "Bachelor's Thesis (PDF)",
-      paperDoc: 'QCE2026 Paper (PDF)',
+      paperOnline: 'Read the paper on arXiv',
       featuresLabel: 'Key features',
       highlightsLabel: 'Highlights',
       techLabel: 'Built with',
@@ -726,7 +733,7 @@ export const CONTENT: Record<Lang, Content> = {
       titleB: 'Lara Martín',
       roles: ['Ingeniero Informático', 'Desarrollador Full Stack', 'Cloud e IA', 'Game Dev & 3D'],
       intro:
-        'Diseño y construyo software de principio a fin, desde sistemas cloud e IA hasta productos full stack y algún juego 3D. Siempre aprendiendo, siempre entregando.',
+        'Ingeniero Informático especializado en IA Generativa, desarrollo de software y cloud. Experiencia en Microsoft diseñando soluciones Azure y desarrollando conceptos de IA para clientes empresariales, desde la definición técnica hasta demos orientadas al cliente.',
       ctaWork: 'Ver proyectos',
       ctaCv: 'Descargar CV',
       ctaContact: 'Hablemos',
@@ -736,8 +743,8 @@ export const CONTENT: Record<Lang, Content> = {
       kicker: 'Sobre mí',
       heading: 'Ingeniero Informático al que le encanta crear',
       body: [
-        'Soy Ingeniero Informático especializado en cloud e IA, y me muevo con soltura por todo el stack: backend, frontend y lo que haga falta. Diseño sistemas escalables, construyo agentes de IA y RAG, y llevo productos de principio a fin.',
-        'Fuera del trabajo me vas a encontrar creando juegos 3D, montando prototipos y aprendiendo sin parar. Curioso, proactivo y con ganas, me importan la ingeniería limpia y el impacto real.',
+        'Soy Ingeniero Informático especializado en IA Generativa, desarrollo de software y cloud. En Microsoft diseñé soluciones Azure y desarrollé conceptos de IA para clientes empresariales, desde la definición técnica hasta demos orientadas al cliente.',
+        'Tengo experiencia práctica con Python, RAG, agentes de IA, Azure OpenAI, Docker y CI/CD. También soy el creador y primer autor de Entangle, un proyecto independiente de investigación sobre el ecosistema de computación cuántica.',
       ],
       stats: [
         { value: '10+', label: 'Proyectos creados' },
@@ -759,11 +766,12 @@ export const CONTENT: Record<Lang, Content> = {
           logo: 'microsoft',
           recommendation: true,
           bullets: [
-            'Diseñé y optimicé arquitecturas cloud escalables en Azure, mejorando el rendimiento y la eficiencia de costes para clientes empresariales.',
-            'Llevé de forma independiente dos conceptos de IA desde la ideación hasta su comercialización para un cliente empresarial del IBEX 35, definiendo el enfoque técnico y creando demos orientadas al cliente desde cero.',
-            'Presenté soluciones de IA y demos técnicas directamente a clientes y perfiles senior, traduciendo tecnologías emergentes en valor de negocio concreto.',
+            'Diseñé y optimicé arquitecturas cloud escalables en Azure, equilibrando rendimiento, fiabilidad y eficiencia de costes para clientes empresariales.',
+            'Llevé dos conceptos de IA desde la ideación técnica hasta su comercialización para clientes empresariales del IBEX 35, definiendo el enfoque técnico y creando demos orientadas al cliente desde cero.',
+            'Desarrollé y presenté soluciones de IA y demos técnicas a clientes y perfiles senior, convirtiendo capacidades de GenAI en casos de uso concretos de negocio.',
             'Apoyé iniciativas de adopción cloud y modernización de aplicaciones, ayudando a clientes empresariales a evaluar y acelerar su transición a Azure.',
-            'Colaboré con equipos de cuenta y stakeholders multidisciplinares para traducir requisitos complejos de clientes en soluciones técnicas escalables.',
+            'Colaboré con equipos de cuenta y stakeholders multidisciplinares para traducir requisitos de clientes en soluciones técnicas escalables.',
+            'Recibí una carta de recomendación formal de Microsoft tras mi etapa como Cloud & AI Solution Engineer.',
           ],
         },
         {
@@ -802,7 +810,7 @@ export const CONTENT: Record<Lang, Content> = {
           logo: 'uclm',
           bullets: [
             'Arquitecturas distribuidas, tecnologías cloud, fundamentos de IA y automatización de procesos.',
-            'TFG: Entangle, mapeo y análisis del ecosistema de computación cuántica en GitHub. Paper revisado por pares aceptado para publicación en QCE2026.',
+            'TFG: Entangle, mapeo y análisis del ecosistema de computación cuántica en GitHub (nota: 9/10, Sobresaliente). Paper del que soy primer autor, aceptado y presentado en QCE 2026; publicado en arXiv.',
           ],
         },
         {
@@ -827,7 +835,7 @@ export const CONTENT: Record<Lang, Content> = {
       openLive: 'Abrir demo',
       viewCode: 'Ver código',
       thesisDoc: 'Memoria del TFG (PDF)',
-      paperDoc: 'Paper de QCE2026 (PDF)',
+      paperOnline: 'Leer el paper en arXiv',
       featuresLabel: 'Características',
       highlightsLabel: 'Aspectos destacados',
       techLabel: 'Construido con',
@@ -899,8 +907,8 @@ export const LINKS = {
   github: 'https://github.com/aangell98',
   learn: 'https://learn.microsoft.com/en-us/users/angelluislaramartin-9888/credentials?tab=credentials-tab',
   learnEs: 'https://learn.microsoft.com/es-es/users/angelluislaramartin-9888/credentials?tab=credentials-tab',
-  cvEn: 'https://github.com/aangell98/aangell98/raw/main/cv/CV_EN.pdf',
-  cvEs: 'https://github.com/aangell98/aangell98/raw/main/cv/CV_ES.pdf',
+  cvEn: `${import.meta.env.BASE_URL}cv/Angel_Luis_Lara_Martin_CV_EN.pdf`,
+  cvEs: `${import.meta.env.BASE_URL}cv/Angel_Luis_Lara_Martin_CV_ES.pdf`,
   recommendationLetterEn: 'https://github.com/aangell98/aangell98/raw/main/letters/Recommendation_Letter_EN.pdf',
   recommendationLetterEs: 'https://github.com/aangell98/aangell98/raw/main/letters/Recommendation_Letter_ES.pdf',
 }
